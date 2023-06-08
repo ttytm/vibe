@@ -1,10 +1,8 @@
 module vibe
 
-const (
-	// Embed vmod file for metadata in a library?
-	meta_name    = 'vibe'
-	meta_version = '0.1.0'
-)
+import v.vmod
+
+const manifest = vmod.decode($embed_file('../v.mod').to_string()) or { panic(err) }
 
 // Initializes a new session to send and receive responses.
 pub fn init_session(opts SessionOpts) !Session {

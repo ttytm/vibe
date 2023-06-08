@@ -21,14 +21,14 @@ fn new_header_list(header_map map[HttpHeader]string, handle &C.CURL) &HeaderList
 
 	// Set default user agent if none was specified
 	if !has_user_agent {
-		curl.easy_setopt(handle, .useragent, '${meta_name}/${meta_version}')
+		curl.easy_setopt(handle, .useragent, '${manifest.name}/${manifest.version}')
 	}
 
 	return list
 }
 
 fn set_default_header(handle &C.CURL) {
-	curl.easy_setopt(handle, .useragent, '${meta_name}/${meta_version}')
+	curl.easy_setopt(handle, .useragent, '${manifest.name}/${manifest.version}')
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
