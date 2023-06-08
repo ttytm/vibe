@@ -77,8 +77,9 @@ println(selector.text())
 **Persistent Cookie**
 
 Share cookies between requests / sessions with a curl cookie jar file.
-The demo below does not provide real authentication data, for a "full" use-case scenario,
-change the payload data and requested URLs to actual addresses that require authentication.
+
+<em>The demo below does not provide real authentication data, for a "full" use-case scenario,
+change the payload data and requested URLs to actual addresses that require authentication.</em>
 
 ```v
 import vibe
