@@ -2,25 +2,33 @@ module vibe
 
 import vibe.curl
 
-fn new_header_list(headers []string) &HeaderList {
+fn new_header_list(header_map map[HttpHeader]string, handle &C.CURL) &HeaderList {
 	mut list := &HeaderList(unsafe { nil })
-	for header in headers {
-		list = curl.slist_append(list, header)
+
+	mut arr := []string{}
+	mut has_user_agent := false
+	for k, v in header_map {
+		if k == .user_agent {
+			has_user_agent = true
+		}
+		arr << '${k.str()}: ${v}'
 	}
+
+	for h in arr {
+		list = curl.slist_append(list, h)
+	}
+	curl.easy_setopt(handle, .httpheader, list)
+
+	// Set default user agent if none was specified
+	if !has_user_agent {
+		curl.easy_setopt(handle, .useragent, '${meta_name}/${meta_version}')
+	}
+
 	return list
 }
 
 fn set_default_header(handle &C.CURL) {
 	curl.easy_setopt(handle, .useragent, '${meta_name}/${meta_version}')
-}
-
-// Should be a method when supported
-fn headers_arr(h map[HttpHeader]string) []string {
-	mut headers := []string{}
-	for k, v in h {
-		headers << '${k.str()}: ${v}'
-	}
-	return headers
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers

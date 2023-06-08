@@ -7,8 +7,7 @@ fn (s Session) post_(url string, data string) !Response {
 
 	// Set header and options
 	if s.headers.len > 0 {
-		header := new_header_list(headers_arr(s.headers))
-		curl.easy_setopt(s.curl, .httpheader, header)
+		header := new_header_list(s.headers, s.curl)
 		defer {
 			curl.slist_free_all(header)
 		}
