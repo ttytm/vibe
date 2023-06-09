@@ -4,7 +4,8 @@ import time
 
 pub struct Session {
 	SessionOpts
-	curl &C.CURL
+	curl        &C.CURL
+	header_list &HeaderList
 }
 
 pub struct SessionOpts {

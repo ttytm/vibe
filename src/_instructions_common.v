@@ -10,10 +10,18 @@ fn init_session_(opts SessionOpts) !Session {
 		kind: .session_init
 	}) }
 
+	header_list := if opts.headers.len > 0 {
+		set_header(opts.headers, h)
+	} else {
+		set_default_header(h)
+	}
+
 	s := Session{
 		SessionOpts: opts
 		curl: h
+		header_list: header_list
 	}
+
 	s.set_opts()
 
 	return s
@@ -45,6 +53,7 @@ fn (s &Session) set_opts() {
 }
 
 fn (s &Session) close_() {
+	curl.slist_free_all(s.header_list)
 	curl.easy_cleanup(s.curl)
 	curl.global_cleanup()
 }

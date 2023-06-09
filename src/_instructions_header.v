@@ -2,7 +2,7 @@ module vibe
 
 import vibe.curl
 
-fn new_header_list(header_map map[HttpHeader]string, handle &C.CURL) &HeaderList {
+fn set_header(header_map map[HttpHeader]string, handle &C.CURL) &HeaderList {
 	mut list := &HeaderList(unsafe { nil })
 
 	mut arr := []string{}
@@ -27,8 +27,9 @@ fn new_header_list(header_map map[HttpHeader]string, handle &C.CURL) &HeaderList
 	return list
 }
 
-fn set_default_header(handle &C.CURL) {
+fn set_default_header(handle &C.CURL) &HeaderList {
 	curl.easy_setopt(handle, .useragent, '${manifest.name}/${manifest.version}')
+	return &HeaderList(unsafe { nil })
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers

@@ -5,15 +5,6 @@ import vibe.curl
 fn (s Session) get_(url string) !Response {
 	mut resp := Response{}
 
-	// Set header and options
-	if s.headers.len > 0 {
-		header := new_header_list(s.headers, s.curl)
-		defer {
-			curl.slist_free_all(header)
-		}
-	} else {
-		set_default_header(s.curl)
-	}
 	s.set_request_opts(.get, &resp, url)
 
 	res := curl.easy_perform(s.curl)
@@ -38,15 +29,6 @@ fn (s Session) get_slice_(url string, start u32, max_size_ ?u32) !Response {
 		}
 	}
 
-	// Set header and options
-	if s.headers.len > 0 {
-		header := new_header_list(s.headers, s.curl)
-		defer {
-			curl.slist_free_all(header)
-		}
-	} else {
-		set_default_header(s.curl)
-	}
 	s.set_request_opts(.get, &resp, url)
 
 	res := curl.easy_perform(s.curl)
