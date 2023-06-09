@@ -5,6 +5,12 @@ import vibe.curl
 fn set_header(header_map map[HttpHeader]string, handle &C.CURL) &HeaderList {
 	mut list := &HeaderList(unsafe { nil })
 
+	// Default header
+	if header_map.len == 0 {
+		curl.easy_setopt(handle, .useragent, '${manifest.name}/${manifest.version}')
+		return list
+	}
+
 	mut arr := []string{}
 	mut has_user_agent := false
 	for k, v in header_map {
@@ -25,11 +31,6 @@ fn set_header(header_map map[HttpHeader]string, handle &C.CURL) &HeaderList {
 	}
 
 	return list
-}
-
-fn set_default_header(handle &C.CURL) &HeaderList {
-	curl.easy_setopt(handle, .useragent, '${manifest.name}/${manifest.version}')
-	return &HeaderList(unsafe { nil })
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers

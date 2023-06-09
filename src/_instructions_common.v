@@ -10,16 +10,10 @@ fn init_session_(opts SessionOpts) !Session {
 		kind: .session_init
 	}) }
 
-	header_list := if opts.headers.len > 0 {
-		set_header(opts.headers, h)
-	} else {
-		set_default_header(h)
-	}
-
 	s := Session{
 		SessionOpts: opts
 		curl: h
-		header_list: header_list
+		header_list: set_header(opts.headers, h)
 	}
 
 	s.set_opts()
