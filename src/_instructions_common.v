@@ -70,16 +70,15 @@ fn (s &Session) set_request_opts(method Method, resp &Response, url string) {
 
 fn (s Session) handle_redirect(mut resp Response) ! {
 	mut status_code := 0
+	mut redir_url := ''.str
 
 	for _ in 0 .. s.max_redirects {
-		mut redir_url := ''.str
 		curl.easy_getinfo(s.curl, .redirect_url, &redir_url)
 		if redir_url == ''.str {
 			return IError(HttpError{
 				kind: .no_redirect_url
 			})
 		}
-
 		resp = Response{}
 		curl.easy_setopt(s.curl, .url, redir_url)
 		res := curl.easy_perform(s.curl)
@@ -92,6 +91,7 @@ fn (s Session) handle_redirect(mut resp Response) ! {
 		if status_code / 100 != 3 {
 			return
 		}
+		redir_url = ''.str
 	}
 
 	return IError(HttpError{
