@@ -1,6 +1,6 @@
 module vibe
 
-fn write_resp(data &char, size u16, nmemb u16, mut userdata Response) u16 {
+fn write_resp(data &char, size usize, nmemb usize, mut userdata Response) usize {
 	n := size * nmemb
 	userdata.pos += n
 	unsafe {
@@ -9,7 +9,7 @@ fn write_resp(data &char, size u16, nmemb u16, mut userdata Response) u16 {
 	return n
 }
 
-fn write_resp_header(data &char, size u16, nmemb u16, mut userdata Response) u16 {
+fn write_resp_header(data &char, size usize, nmemb usize, mut userdata Response) usize {
 	n := size * nmemb
 	userdata.pos += n
 	unsafe {
@@ -18,7 +18,7 @@ fn write_resp_header(data &char, size u16, nmemb u16, mut userdata Response) u16
 	return n
 }
 
-fn write_resp_slice(data &char, size u16, nmemb u16, mut userdata Response) u16 {
+fn write_resp_slice(data &char, size usize, nmemb usize, mut userdata Response) usize {
 	n := size * nmemb
 	userdata.pos += n
 

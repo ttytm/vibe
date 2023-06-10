@@ -53,7 +53,7 @@ If optimizing speed is of concern when querying pages with large response bodies
 // Allocation of the received response as a vstring is postponed until the `start` byte position is reached.
 // The content is returned as soon as the slice reaches its `max_size` (offset from `start`)
 // - `max_size` can be `none` to return the remainder from the start.
-pub fn (session Session) get_slice(url string, start u32, size ?u32) !Response {
+pub fn (session Session) get_slice(url string, start usize, size ?usize) !Response {
 	return session.get_slice_(url, start, size)
 }
 ```

@@ -55,8 +55,6 @@ fn (s &Session) set_request_opts(method Method, resp &Response, url string) {
 			curl.easy_setopt(s.curl, .httpget, 1)
 			if resp.slice.start != 0 {
 				curl.easy_setopt(s.curl, .writefunction, write_resp_slice)
-			} else {
-				curl.easy_setopt(s.curl, .writefunction, write_resp)
 			}
 		}
 		.post {

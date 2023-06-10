@@ -27,7 +27,7 @@ fn (s Session) get_(url string) !Response {
 	return resp
 }
 
-fn (s Session) get_slice_(url string, start u32, max_size_ ?u32) !Response {
+fn (s Session) get_slice_(url string, start usize, max_size_ ?usize) !Response {
 	max_size := max_size_ or { 0 }
 	mut resp := Response{
 		slice: struct {
