@@ -15,12 +15,14 @@ fn (s Session) get_(url string) !Response {
 	}
 
 	mut status_code := 0
-	curl.easy_getinfo(s.curl, curl.Info.response_code, &status_code)
+	curl.easy_getinfo(s.curl, .response_code, &status_code)
+	if status_code / 100 == 3 {
+		s.handle_redirect(mut resp)!
+	}
 
 	resp.get_http_version()!
 	resp.status = Status(status_code)
 	resp.body = resp.body[resp.header.len..]
-
 	return resp
 }
 
@@ -49,10 +51,13 @@ fn (s Session) get_slice_(url string, start u32, max_size_ ?u32) !Response {
 	}
 
 	mut status_code := 0
-	curl.easy_getinfo(s.curl, curl.Info.response_code, &status_code)
-	resp.status = Status(status_code)
+	curl.easy_getinfo(s.curl, .response_code, &status_code)
+	if status_code / 100 == 3 {
+		s.handle_redirect(mut resp)!
+	}
 
 	resp.get_http_version()!
+	resp.status = Status(status_code)
 
 	if start < resp.header.len {
 		resp.body = resp.body[resp.header.len - int(start)..]

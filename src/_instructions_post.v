@@ -16,7 +16,10 @@ fn (s Session) post_(url string, data string) !Response {
 	}
 
 	mut status_code := 0
-	curl.easy_getinfo(s.curl, curl.Info.response_code, &status_code)
+	curl.easy_getinfo(s.curl, .response_code, &status_code)
+	if status_code / 100 == 3 {
+		s.handle_redirect(mut resp)!
+	}
 
 	resp.get_http_version()!
 	resp.status = Status(status_code)

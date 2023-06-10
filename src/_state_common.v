@@ -16,7 +16,7 @@ pub mut:
 	cookie_jar     string
 	cookie_file    string
 	timeout        time.Duration
-	max_redirects  u16
+	max_redirects  u16 = 10
 }
 
 // TODO:

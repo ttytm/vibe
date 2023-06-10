@@ -34,9 +34,6 @@ fn (s &Session) set_opts() {
 	if s.timeout > 0 {
 		curl.easy_setopt(s.curl, .timeout_ms, s.timeout.milliseconds())
 	}
-	if s.max_redirects > 0 {
-		curl.easy_setopt(s.curl, .maxredirs, s.max_redirects)
-	}
 	curl.easy_setopt(s.curl, .header, 1)
 	curl.easy_setopt(s.curl, .headerfunction, write_resp_header)
 	curl.easy_setopt(s.curl, .writefunction, write_resp)
@@ -69,4 +66,35 @@ fn (s &Session) set_request_opts(method Method, resp &Response, url string) {
 	curl.easy_setopt(s.curl, .url, url)
 	curl.easy_setopt(s.curl, .writedata, resp)
 	curl.easy_setopt(s.curl, .headerdata, resp)
+}
+
+fn (s Session) handle_redirect(mut resp Response) ! {
+	mut status_code := 0
+
+	for _ in 0 .. s.max_redirects {
+		mut redir_url := ''.str
+		curl.easy_getinfo(s.curl, .redirect_url, &redir_url)
+		if redir_url == ''.str {
+			return IError(HttpError{
+				kind: .no_redirect_url
+			})
+		}
+
+		resp = Response{}
+		curl.easy_setopt(s.curl, .url, redir_url)
+		res := curl.easy_perform(s.curl)
+		if res != curl.Ecode.ok {
+			return IError(curl.CurlError{
+				e_code: res
+			})
+		}
+		curl.easy_getinfo(s.curl, .response_code, &status_code)
+		if status_code / 100 != 3 {
+			return
+		}
+	}
+
+	return IError(HttpError{
+		kind: .max_redirs_reached
+	})
 }
