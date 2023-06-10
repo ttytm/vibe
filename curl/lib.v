@@ -45,11 +45,11 @@ pub fn easy_perform(handle &C.CURL) Ecode {
 	return C.curl_easy_perform(handle)
 }
 
-pub fn easy_getinfo[T](handle &C.CURL, info state.Info, typ T) Ecode {
+pub fn easy_getinfo[T](handle &C.CURL, info Info, typ T) Ecode {
 	return C.curl_easy_getinfo(handle, info, typ)
 }
 
-pub fn easy_strerror(err_code state.Ecode) string {
+pub fn easy_strerror(err_code Ecode) string {
 	return instructions.easy_strerror(err_code)
 }
 
