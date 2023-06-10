@@ -2,7 +2,7 @@
 [generated]
 module state
 
-enum Info {
+pub enum Info {
 	activesocket = C.CURLINFO_ACTIVESOCKET //  get the active socket
 	appconnect_time = C.CURLINFO_APPCONNECT_TIME //  get the time until the SSL/SSH handshake is completed
 	appconnect_time_t = C.CURLINFO_APPCONNECT_TIME_T //  time until the SSL/SSH handshake completed
