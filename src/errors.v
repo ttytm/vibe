@@ -12,7 +12,6 @@ enum HttpErrorKind {
 	status_line
 	version
 	version_segment
-	no_redirect_url
 	max_redirs_reached
 }
 
@@ -23,7 +22,6 @@ fn (err HttpError) msg() string {
 		.status_line { 'Failed processing HTTP response - Invalid header status line: `${err.val}`' }
 		.version { 'Failed processing HTTP version: `${err.val}`' }
 		.version_segment { 'Failed processing HTTP version segment: `${err.val}`' }
-		.no_redirect_url { 'Failed getting url info after redirect' }
 		.max_redirs_reached { 'Maximum redirects reached' }
 	}
 }
