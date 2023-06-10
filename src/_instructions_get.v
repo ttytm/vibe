@@ -18,6 +18,7 @@ fn (s Session) get_(url string) !Response {
 	curl.easy_getinfo(s.curl, .response_code, &status_code)
 	if status_code / 100 == 3 {
 		s.handle_redirect(mut resp)!
+		curl.easy_getinfo(s.curl, .response_code, &status_code)
 	}
 
 	resp.get_http_version()!
@@ -54,6 +55,7 @@ fn (s Session) get_slice_(url string, start u32, max_size_ ?u32) !Response {
 	curl.easy_getinfo(s.curl, .response_code, &status_code)
 	if status_code / 100 == 3 {
 		s.handle_redirect(mut resp)!
+		curl.easy_getinfo(s.curl, .response_code, &status_code)
 	}
 
 	resp.get_http_version()!
