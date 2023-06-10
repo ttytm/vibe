@@ -15,6 +15,8 @@ fn C.curl_easy_perform(&C.CURL) state.Ecode
 
 fn C.curl_easy_strerror(state.Ecode) &char
 
+fn C.curl_easy_getinfo(&C.CURL, state.Info, voidptr) state.Ecode
+
 pub fn easy_init() !&C.CURL {
 	handle := C.curl_easy_init()
 	unsafe {
