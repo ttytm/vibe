@@ -32,6 +32,7 @@ pub fn (session Session) post(url string, data string) !Response {
 	return session.post_(url, data)!
 }
 
+// Returns the message associated with the status code.
 pub fn (status Status) msg() string {
 	return status.msg_()
 }
