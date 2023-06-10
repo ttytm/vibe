@@ -2,8 +2,7 @@ module vibe
 
 import strconv
 
-// TODO: extend to additional curl-compatible formats beyond HTTP.
-fn (mut resp Response) set_status_line() ! {
+fn (mut resp Response) get_http_version() ! {
 	status_line := resp.header.before('\r\n')
 
 	// Example: [0]: http/1.1 [1]: 200 [2]: OK
@@ -34,29 +33,12 @@ fn (mut resp Response) set_status_line() ! {
 		}
 	}
 
-	status_str := vals[1]
-	if status_str.len != 3 {
-		return IError(HttpError{
-			kind: .status_code
-			val: status_str
-		})
-	}
-	status_code := strconv.atoi(status_str)!
-
-	status_msg := if vals[2] == '' {
-		status_msg_from_code(status_code)
-	} else {
-		vals[2]
-	}
-
 	resp.http_version = version
-	resp.status_code = status_code
-	resp.status_msg = status_msg
 }
 
 // https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
 [generated]
-fn status_msg_from_code(status_code int) string {
+fn (status_code Status) msg_() string {
 	return match status_code {
 		100 { 'Continue' }
 		101 { 'Switching Protocols' }

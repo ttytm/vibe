@@ -12,7 +12,6 @@ mut:
 pub mut:
 	body         string
 	header       string
-	status_code  int
-	status_msg   string
+	status       Status
 	http_version string
 }

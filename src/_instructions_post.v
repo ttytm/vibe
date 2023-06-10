@@ -15,7 +15,11 @@ fn (s Session) post_(url string, data string) !Response {
 		})
 	}
 
-	resp.set_status_line()!
+	mut status_code := 0
+	curl.easy_getinfo(s.curl, curl.Info.response_code, &status_code)
+
+	resp.get_http_version()!
+	resp.status = Status(status_code)
 	resp.body = resp.body[resp.header.len..]
 
 	return resp

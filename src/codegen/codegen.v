@@ -70,7 +70,7 @@ fn gen_status(session vibe.Session) string {
 		panic('Failed finding status selector tags `<table>`.')
 	}
 
-	mut status_msg_fn := 'fn status_msg_from_code(status_code int) string {
+	mut status_msg_fn := 'fn (status_code Status) msg_() string {
 \t return match status_code {\n'
 
 	for r in rows {

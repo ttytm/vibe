@@ -2,6 +2,8 @@ module vibe
 
 type HeaderList = C.curl_slist
 
+type Status = int
+
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
 [generated]
 pub enum HttpHeader {
