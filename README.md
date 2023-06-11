@@ -9,34 +9,27 @@ Vibe utilizes a V libcurl wrapper to provide an easy-access layer for fast and r
 ```v
 import vibe
 
-s := vibe.init_session(vibe.SessionOpts{})!
-defer {
-	s.close()
-}
-
-resp := s.get('https://hacker-news.firebaseio.com/v0/item/1.json')!
+req := vibe.Request{}
+resp := req.get('https://hacker-news.firebaseio.com/v0/item/1.json')!
 println(resp.body)
 ```
 
 **POST request**
 
 ```v
-import vibe { SessionOpts, init_session }
+import vibe
 import time
 
-s := init_session(SessionOpts{
+req := vibe.Request{
 	headers: {
 		.user_agent:   'YourCustomUserAgent/v0.0.1'
 		.content_type: 'application/json; charset=utf-8'
 	}
 	timeout: time.second * 10
-})!
-defer {
-	s.close()
 }
 
 // NOTE: httpbin can be slow to respond at times
-resp := s.post('https://httpbin.org/post', '{"msg":"hello from vibe"}')!
+resp := req.post('https://httpbin.org/post', '{"msg":"hello from vibe"}')!
 println(resp)
 ```
 
@@ -53,8 +46,8 @@ If optimizing speed is of concern when querying pages with large response bodies
 // Allocation of the received response as a vstring is postponed until the `start` byte position is reached.
 // The content is returned as soon as the slice reaches its `max_size` (offset from `start`)
 // - `max_size` can be `none` to return the remainder from the start.
-pub fn (session Session) get_slice(url string, start usize, size ?usize) !Response {
-	return session.get_slice_(url, start, size)
+pub fn (req Request) get_slice(url string, start usize, size ?usize) !Response {
+	return req.get_slice_(url, start, size)!
 }
 ```
 
@@ -62,12 +55,9 @@ pub fn (session Session) get_slice(url string, start usize, size ?usize) !Respon
 import vibe
 import net.html
 
-s := vibe.init_session(vibe.SessionOpts{})!
-defer {
-	s.close()
-}
-
-resp := s.get_slice('https://docs.vosca.dev/advanced-concepts/v-and-c.html', 65_000, 10_000)!
+req := vibe.Request{}
+resp := req.get_slice('https://docs.vosca.dev/advanced-concepts/v-and-c.html', 65_000,
+	10_000)!
 selector := html.parse(resp.body).get_tags_by_class_name('language-vmod')[0]
 println(selector.text())
 ```
@@ -84,33 +74,30 @@ change the payload data and requested URLs to actual addresses that require auth
 ```v
 import vibe
 import os
-import time
 
 cookie_jar := './demo_cookie'
 
-s := vibe.init_session(vibe.SessionOpts{
+req := vibe.Request{
 	headers: {
 		.content_type: 'application/json; charset=utf-8'
 	}
 	cookie_jar: cookie_jar
-})!
+}
 
 // Login and save cookies to curl cookie file.
-s.post('https://api.yourdomain.com/v1/login', '{"username":"yourname","password":"password"}')!
-s.close()
+req.post('https://api.yourdomain.com/v1/login', '{"username":"yourname","password":"password"}')!
 
 // Use the `cookie_file` in subsequent sessions to access endpoints that require the authentication above.
-s2 := vibe.init_session(vibe.SessionOpts{
+req2 := vibe.Request{
 	headers: {
 		.content_type: 'application/json; charset=utf-8'
 	}
 	cookie_file: cookie_jar
-})!
+}
 
-resp := s2.get('https://api.yourdomain.com/v1/protected_page')!
+resp := req2.get('https://api.yourdomain.com/v1/protected_page')!
 // ... use resp
 
-s2.close()
 // Remove the cookie file or keep it for later usage.
 os.rm(cookie_jar)!
 ```
