@@ -1,33 +1,33 @@
 module vibe
 
-fn write_resp(data &char, size usize, nmemb usize, mut userdata Response) usize {
+fn write_resp(data &char, size usize, nmemb usize, mut resp Response) usize {
 	n := size * nmemb
-	userdata.pos += n
+	resp.pos += n
 	unsafe {
-		userdata.body += data.vstring()
+		resp.body += data.vstring()
 	}
 	return n
 }
 
-fn write_resp_header(data &char, size usize, nmemb usize, mut userdata Response) usize {
+fn write_resp_header(data &char, size usize, nmemb usize, mut resp Response) usize {
 	n := size * nmemb
-	userdata.pos += n
+	resp.pos += n
 	unsafe {
-		userdata.header += data.vstring()
+		resp.header += data.vstring()
 	}
 	return n
 }
 
-fn write_resp_slice(data &char, size usize, nmemb usize, mut userdata Response) usize {
+fn write_resp_slice(data &char, size usize, nmemb usize, mut resp Response) usize {
 	n := size * nmemb
-	userdata.pos += n
+	resp.pos += n
 
-	if userdata.pos > userdata.slice.start {
+	if resp.pos > resp.slice.start {
 		unsafe {
-			userdata.body += data.vstring()
+			resp.body += data.vstring()
 		}
-		if userdata.slice.end != userdata.slice.start && userdata.pos > userdata.slice.end {
-			userdata.slice.finished = true
+		if resp.slice.end != resp.slice.start && resp.pos > resp.slice.end {
+			resp.slice.finished = true
 			return 0
 		}
 	}
