@@ -30,4 +30,5 @@ pub enum SSLLevel {
 enum Method {
 	get
 	post
+	head
 }

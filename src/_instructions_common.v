@@ -34,9 +34,8 @@ fn (s &Session) set_opts() {
 	if s.timeout > 0 {
 		curl.easy_setopt(s.curl, .timeout_ms, s.timeout.milliseconds())
 	}
-	curl.easy_setopt(s.curl, .header, 1)
+
 	curl.easy_setopt(s.curl, .headerfunction, write_resp_header)
-	curl.easy_setopt(s.curl, .writefunction, write_resp)
 
 	$if curl_verbose ? {
 		curl.easy_setopt(s.curl, .verbose, 1)
@@ -50,19 +49,25 @@ fn (s &Session) close_() {
 }
 
 fn (s &Session) set_request_opts(method Method, resp &Response, url string) {
-	match method {
-		.get {
-			curl.easy_setopt(s.curl, .httpget, 1)
-			if resp.slice.start != 0 {
-				curl.easy_setopt(s.curl, .writefunction, write_resp_slice)
-			}
-		}
-		.post {
-			curl.easy_setopt(s.curl, .post, 1)
-		}
+	if method in [.get, .head] {
+		curl.easy_setopt(s.curl, .httpget, 1)
 	}
+
+	if method == .head {
+		curl.easy_setopt(s.curl, .header, 0)
+		curl.easy_setopt(s.curl, .nobody, 1)
+	} else if method == .get && resp.slice.start > 0 {
+		curl.easy_setopt(s.curl, .writefunction, write_resp_slice)
+	} else if method == .post {
+		curl.easy_setopt(s.curl, .post, 1)
+	} else {
+		curl.easy_setopt(s.curl, .nobody, 0)
+		curl.easy_setopt(s.curl, .header, 1)
+		curl.easy_setopt(s.curl, .writefunction, write_resp)
+		curl.easy_setopt(s.curl, .writedata, resp)
+	}
+
 	curl.easy_setopt(s.curl, .url, url)
-	curl.easy_setopt(s.curl, .writedata, resp)
 	curl.easy_setopt(s.curl, .headerdata, resp)
 }
 

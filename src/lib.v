@@ -27,6 +27,11 @@ pub fn (session Session) get_slice(url string, start usize, size ?usize) !Respon
 	return session.get_slice_(url, start, size)!
 }
 
+// Sends a HEAD request to the specified `url` and returns the response.
+pub fn (session Session) head(url string) !Response {
+	return session.head_(url)!
+}
+
 // Sends a POST request to the specified `url` and returns the response.
 pub fn (session Session) post(url string, data string) !Response {
 	return session.post_(url, data)!
