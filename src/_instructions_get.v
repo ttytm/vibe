@@ -7,12 +7,7 @@ fn (s Session) get_(url string) !Response {
 
 	s.set_request_opts(.get, &resp, url)
 
-	res := curl.easy_perform(s.curl)
-	if res != curl.Ecode.ok {
-		return IError(curl.CurlError{
-			e_code: res
-		})
-	}
+	send_request(s.curl)!
 
 	mut status_code := 0
 	curl.easy_getinfo(s.curl, .response_code, &status_code)

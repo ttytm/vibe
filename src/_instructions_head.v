@@ -6,12 +6,8 @@ fn (s Session) head_(url string) !Response {
 	mut resp := Response{}
 
 	s.set_request_opts(.head, &resp, url)
-	header_res := curl.easy_perform(s.curl)
-	if header_res != curl.Ecode.ok {
-		return IError(curl.CurlError{
-			e_code: header_res
-		})
-	}
+
+	send_request(s.curl)!
 
 	mut status_code := 0
 	curl.easy_getinfo(s.curl, .response_code, &status_code)
@@ -34,12 +30,8 @@ fn (s Session) get_head(url string) !Response {
 	s.set_request_opts(.get, &resp, url)
 	curl.easy_setopt(s.curl, .writefunction, write_null)
 	curl.easy_setopt(s.curl, .writedata, unsafe { nil })
-	header_res := curl.easy_perform(s.curl)
-	if header_res != curl.Ecode.ok {
-		return IError(curl.CurlError{
-			e_code: header_res
-		})
-	}
+
+	send_request(s.curl)!
 
 	mut status_code := 0
 	curl.easy_getinfo(s.curl, .response_code, &status_code)

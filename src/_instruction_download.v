@@ -18,12 +18,7 @@ fn (s Session) download_file_(url string, file_path string) !Response {
 	curl.easy_setopt(s.curl, .writefunction, write_download)
 	curl.easy_setopt(s.curl, .writedata, &fw)
 
-	res := curl.easy_perform(s.curl)
-	if res != curl.Ecode.ok {
-		return IError(curl.CurlError{
-			e_code: res
-		})
-	}
+	send_request(s.curl)!
 
 	mut status_code := 0
 	curl.easy_getinfo(s.curl, .response_code, &status_code)

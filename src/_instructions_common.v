@@ -80,6 +80,15 @@ fn (s &Session) set_request_opts(method Method, resp &Response, url string) {
 	curl.easy_setopt(s.curl, .headerdata, resp)
 }
 
+fn send_request(handle &C.CURL) ! {
+	res := curl.easy_perform(handle)
+	if res != curl.Ecode.ok {
+		return IError(curl.CurlError{
+			e_code: res
+		})
+	}
+}
+
 fn (s Session) handle_redirect(mut resp Response) ! {
 	mut status_code := 0
 	mut redir_url := ''.str
@@ -88,12 +97,7 @@ fn (s Session) handle_redirect(mut resp Response) ! {
 		resp = Response{}
 		curl.easy_getinfo(s.curl, .redirect_url, &redir_url)
 		curl.easy_setopt(s.curl, .url, redir_url)
-		res := curl.easy_perform(s.curl)
-		if res != curl.Ecode.ok {
-			return IError(curl.CurlError{
-				e_code: res
-			})
-		}
+		send_request(s.curl)!
 		curl.easy_getinfo(s.curl, .response_code, &status_code)
 		if status_code / 100 != 3 {
 			return
