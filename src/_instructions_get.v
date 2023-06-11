@@ -44,18 +44,20 @@ fn (s Session) get_slice_(url string, start usize, max_size_ ?usize) !Response {
 			e_code: res
 		})
 	}
-	if resp.body.len == 0 {
-		return IError(HttpError{
-			kind: .slice_out_of_range
-			val: '${start}..${resp.slice.end}'
-		})
-	}
 
 	mut status_code := 0
 	curl.easy_getinfo(s.curl, .response_code, &status_code)
 	if status_code / 100 == 3 {
 		s.handle_redirect(mut resp)!
 		curl.easy_getinfo(s.curl, .response_code, &status_code)
+	}
+
+	if resp.body.len == 0 {
+		return IError(HttpError{
+			kind: .slice_out_of_range
+			// TODO: handle slice with remainder size in error message
+			val: '${start}..${resp.slice.end}'
+		})
 	}
 
 	resp.get_http_version()!

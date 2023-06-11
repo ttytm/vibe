@@ -49,24 +49,34 @@ fn (s &Session) close_() {
 }
 
 fn (s &Session) set_request_opts(method Method, resp &Response, url string) {
+	// Individual
+	match method {
+		.get {
+			if resp.slice.start > 0 {
+				curl.easy_setopt(s.curl, .writefunction, write_resp_slice)
+			}
+		}
+		.post {
+			curl.easy_setopt(s.curl, .post, 1)
+		}
+		.head {
+			curl.easy_setopt(s.curl, .header, 0)
+			curl.easy_setopt(s.curl, .nobody, 1)
+		}
+	}
+
+	// Partially shared
 	if method in [.get, .head] {
 		curl.easy_setopt(s.curl, .httpget, 1)
 	}
-
-	if method == .head {
-		curl.easy_setopt(s.curl, .header, 0)
-		curl.easy_setopt(s.curl, .nobody, 1)
-	} else if method == .get && resp.slice.start > 0 {
-		curl.easy_setopt(s.curl, .writefunction, write_resp_slice)
-	} else if method == .post {
-		curl.easy_setopt(s.curl, .post, 1)
-	} else {
+	if method != .head {
 		curl.easy_setopt(s.curl, .nobody, 0)
 		curl.easy_setopt(s.curl, .header, 1)
 		curl.easy_setopt(s.curl, .writefunction, write_resp)
 		curl.easy_setopt(s.curl, .writedata, resp)
 	}
 
+	// Shared
 	curl.easy_setopt(s.curl, .url, url)
 	curl.easy_setopt(s.curl, .headerdata, resp)
 }
