@@ -7,7 +7,7 @@ struct HttpError {
 }
 
 enum HttpErrorKind {
-	session_init
+	easy_init
 	slice_out_of_range
 	status_line
 	version
@@ -17,7 +17,7 @@ enum HttpErrorKind {
 
 fn (err HttpError) msg() string {
 	return match err.kind {
-		.session_init { 'Failed initiating session' }
+		.easy_init { 'Failed initiating curl' }
 		.slice_out_of_range { 'Failed finding slice in range: `${err.val}`' }
 		.status_line { 'Failed processing HTTP response - Invalid header status line: `${err.val}`' }
 		.version { 'Failed processing HTTP version: `${err.val}`' }

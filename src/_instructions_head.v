@@ -4,7 +4,7 @@ import vibe.curl
 
 fn (req Request) head_(url string) !Response {
 	h := curl.easy_init() or { return IError(HttpError{
-		kind: .session_init
+		kind: .easy_init
 	}) }
 	header := set_header(req.headers, h)
 	defer {

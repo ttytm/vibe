@@ -5,7 +5,7 @@ import vibe.curl
 
 fn (req Request) download_file_(url string, file_path string) !Response {
 	h := curl.easy_init() or { return IError(HttpError{
-		kind: .session_init
+		kind: .easy_init
 	}) }
 	header := set_header(req.headers, h)
 	defer {

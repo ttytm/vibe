@@ -5,7 +5,7 @@ import vibe.curl
 fn (req Request) get_(url string) !Response {
 	// Curl handle
 	h := curl.easy_init() or { return IError(HttpError{
-		kind: .session_init
+		kind: .easy_init
 	}) }
 	header := set_header(req.headers, h)
 	defer {
@@ -33,7 +33,7 @@ fn (req Request) get_(url string) !Response {
 
 fn (req Request) get_slice_(url string, start usize, max_size_ ?usize) !Response {
 	h := curl.easy_init() or { return IError(HttpError{
-		kind: .session_init
+		kind: .easy_init
 	}) }
 	header := set_header(req.headers, h)
 	defer {
