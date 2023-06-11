@@ -57,11 +57,20 @@ resp := req.post('https://httpbin.org/post', '{"msg":"hello from vibe"}')!
 println(resp)
 ```
 
+**Download**
+
+```v
+import vibe
+
+vibe.Request{}.download_file('https://github.com/vlang/v/releases/download/weekly.2023.23/v_linux.zip',
+	'v_linux.zip')!
+```
+
 <details><summary><b>More examples</b></summary>
 
 <br>
 
-**Slice request**
+**GET Slice request**
 
 If optimizing speed is of concern when querying pages with large response bodies, and you know you only need a portion of them, you can perform a `get_slice` request.
 
