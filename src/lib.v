@@ -46,3 +46,13 @@ pub fn (session Session) post(url string, data string) !Response {
 pub fn (status Status) msg() string {
 	return status.msg_()
 }
+
+// Initializes libcurl with a custom flag.
+pub fn custom_init(flag CustomInitFlag) {
+	custom_init_(flag)
+}
+
+// Releases resources that were acquired initializing the underlying libcurl module.
+pub fn cleanup() {
+	cleanup_()
+}
