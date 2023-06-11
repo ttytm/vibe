@@ -3,17 +3,10 @@ module vibe
 import time
 import vibe.curl.state
 
-pub struct Session {
-	SessionOpts
-	curl        &C.CURL
-	header_list &HeaderList
-}
-
-pub struct SessionOpts {
+pub struct Request {
 pub mut:
 	headers        map[HttpHeader]string
 	custom_headers map[string]string // TODO:
-	cookie_session bool = true
 	cookie_jar     string
 	cookie_file    string
 	timeout        time.Duration

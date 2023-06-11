@@ -2,42 +2,31 @@ module vibe
 
 import vibe.curl
 
-fn (s Session) head_(url string) !Response {
+fn (req Request) head_(url string) !Response {
+	h := curl.easy_init() or { return IError(HttpError{
+		kind: .session_init
+	}) }
+	header := set_header(req.headers, h)
+	defer {
+		curl.easy_cleanup(h)
+		curl.slist_free_all(header)
+	}
+
 	mut resp := Response{}
-
-	s.set_request_opts(.head, &resp, url)
-
-	send_request(s.curl)!
+	curl.easy_setopt(h, .nobody, 1)
+	curl.easy_setopt(h, .header, 0)
+	req.set_common_opts(h, url, &resp)
+	send_request(h)!
 
 	mut status_code := 0
-	curl.easy_getinfo(s.curl, .response_code, &status_code)
+	curl.easy_getinfo(h, .response_code, &status_code)
 	if status_code / 100 == 3 {
-		s.handle_redirect(mut resp)!
+		resp.handle_redirect(h, req.max_redirects)!
+		curl.easy_getinfo(h, .response_code, &status_code)
 	}
 
 	resp.get_http_version()!
 	resp.status = Status(status_code)
-
-	return resp
-}
-
-// Head requests often fail due to beeing unauthicated.
-// Performing a get request that omits the body to get information about the head can be a workaround.
-// For now this function is for internal usage, e.g. in conjunction with downloading.
-fn (s Session) get_head(url string) !Response {
-	mut resp := Response{}
-
-	s.set_request_opts(.get, &resp, url)
-	curl.easy_setopt(s.curl, .writefunction, write_null)
-	curl.easy_setopt(s.curl, .writedata, unsafe { nil })
-
-	send_request(s.curl)!
-
-	mut status_code := 0
-	curl.easy_getinfo(s.curl, .response_code, &status_code)
-	if status_code / 100 == 3 {
-		s.handle_redirect(mut resp)!
-	}
 
 	return resp
 }
