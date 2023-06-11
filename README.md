@@ -2,6 +2,30 @@
 
 Vibe utilizes a V libcurl wrapper to provide an easy-access layer for fast and reliable requests.
 
+## Installation
+
+Install via `v` cli
+
+- From source
+
+  ```
+  v install --git https://github.com/tobealive/vibe
+  ```
+
+  ```v
+  import vibe
+  ```
+
+- As vpm module
+
+  ```
+  v install tobealive.vibe
+  ```
+
+  ```v
+  import tobealive.vibe
+  ```
+
 ## Usage examples
 
 **GET request**
