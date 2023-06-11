@@ -1,4 +1,4 @@
-<h1 align="center"><img src ="https://github.com/tobealive/ui/assets/34311583/15dcf057-8284-4f5d-8622-0d8d878fa4bb" alt="vibe logo" width="125"></h1>
+<h1 align="center"><a href="https://github.com/tobealive/vibe"><img src ="https://github.com/tobealive/ui/assets/34311583/15dcf057-8284-4f5d-8622-0d8d878fa4bb" alt="vibe logo" width="125"></a></h1>
 
 Vibe utilizes a V libcurl wrapper to provide an easy-access layer for fast and reliable requests.
 
