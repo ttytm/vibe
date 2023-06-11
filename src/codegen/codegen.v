@@ -2,10 +2,13 @@
 import net.html
 import vibe
 
-const separator = '\n-----------------------------------------------------------------------\n'
+const (
+	request   = vibe.Request{}
+	separator = '\n-----------------------------------------------------------------------\n'
+)
 
-fn gen_headers(session vibe.Session) string {
-	body := session.get_slice('https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers',
+fn gen_headers() string {
+	body := request.get_slice('https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers',
 		25_000, 35_000) or { panic('Error requesting headers source: ${err}') }.body
 	mut lists := html.parse(body).get_tag('details')
 	if lists.len == 0 {
@@ -61,8 +64,8 @@ ${separator}
 ${header_str_method}'
 }
 
-fn gen_status(session vibe.Session) string {
-	body := session.get('https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml') or {
+fn gen_status() string {
+	body := request.get('https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml') or {
 		panic('Error requesting headers source: ${err}')
 	}.body
 	mut rows := html.parse(body).get_tag('table')[0].get_tags('tr')
@@ -89,12 +92,7 @@ fn gen_status(session vibe.Session) string {
 ${status_msg_fn}'
 }
 
-session := vibe.init_session(vibe.SessionOpts{})!
-defer {
-	session.close()
-}
-
 // For now, a manual approach yanking the generated code from stdout will suffice.
-println(gen_headers(session))
+println(gen_headers())
 println(separator)
-println(gen_status(session))
+println(gen_status())
