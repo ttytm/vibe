@@ -2,9 +2,21 @@ module vibe
 
 import vibe.curl
 
-fn init_session_(opts SessionOpts) !Session {
+// Automatically call curl_global_init when using `vibe`.
+fn init() {
 	curl.global_init(.default)
+}
 
+fn custom_init_(flag CustomInitFlag) {
+	curl.global_cleanup()
+	curl.global_init(flag)
+}
+
+fn cleanup_() {
+	curl.global_cleanup()
+}
+
+fn init_session_(opts SessionOpts) !Session {
 	// Curl handle
 	h := curl.easy_init() or { return IError(HttpError{
 		kind: .session_init
@@ -45,7 +57,6 @@ fn (s &Session) set_opts() {
 fn (s &Session) close_() {
 	curl.slist_free_all(s.header_list)
 	curl.easy_cleanup(s.curl)
-	curl.global_cleanup()
 }
 
 fn (s &Session) set_request_opts(method Method, resp &Response, url string) {

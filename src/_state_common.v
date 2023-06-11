@@ -1,6 +1,7 @@
 module vibe
 
 import time
+import vibe.curl.state
 
 pub struct Session {
 	SessionOpts
@@ -32,3 +33,7 @@ enum Method {
 	post
 	head
 }
+
+// vfmt off
+pub type CustomInitFlag = state.GlobalInitFlag
+// vfmt on
