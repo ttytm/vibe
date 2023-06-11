@@ -52,9 +52,7 @@ fn (s &Session) set_request_opts(method Method, resp &Response, url string) {
 	// Individual
 	match method {
 		.get {
-			if resp.slice.start > 0 {
-				curl.easy_setopt(s.curl, .writefunction, write_resp_slice)
-			}
+			curl.easy_setopt(s.curl, .httpget, 1)
 		}
 		.post {
 			curl.easy_setopt(s.curl, .post, 1)
@@ -66,14 +64,15 @@ fn (s &Session) set_request_opts(method Method, resp &Response, url string) {
 	}
 
 	// Partially shared
-	if method in [.get, .head] {
-		curl.easy_setopt(s.curl, .httpget, 1)
-	}
 	if method != .head {
 		curl.easy_setopt(s.curl, .nobody, 0)
 		curl.easy_setopt(s.curl, .header, 1)
-		curl.easy_setopt(s.curl, .writefunction, write_resp)
 		curl.easy_setopt(s.curl, .writedata, resp)
+		if resp.slice.start > 0 {
+			curl.easy_setopt(s.curl, .writefunction, write_resp_slice)
+		} else {
+			curl.easy_setopt(s.curl, .writefunction, write_resp)
+		}
 	}
 
 	// Shared
