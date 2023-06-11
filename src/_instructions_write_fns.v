@@ -34,3 +34,19 @@ fn write_resp_slice(data &char, size usize, nmemb usize, mut resp Response) usiz
 
 	return n
 }
+
+fn write_download(data &char, size usize, nmemb usize, mut fw FileWriter) usize {
+	n := size * nmemb
+
+	unsafe {
+		if fw.file.is_opened {
+			fw.file.write_ptr_at(data, int(n), fw.pos)
+			fw.pos += u64(n)
+		}
+	}
+	return n
+}
+
+fn write_null(data &char, size usize, nmemb usize) usize {
+	return size * nmemb
+}

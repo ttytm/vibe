@@ -32,6 +32,11 @@ pub fn (session Session) head(url string) !Response {
 	return session.head_(url)!
 }
 
+// Downloads a document from the specified `url` and saves it to the specified `file_path`.
+pub fn (session Session) download_file(url string, file_path string) !Response {
+	return session.download_file_(url, file_path)!
+}
+
 // Sends a POST request to the specified `url` and returns the response.
 pub fn (session Session) post(url string, data string) !Response {
 	return session.post_(url, data)!
