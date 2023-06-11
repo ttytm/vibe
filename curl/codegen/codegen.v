@@ -2,10 +2,13 @@
 import net.html
 import vibe
 
-const separator = '\n-----------------------------------------------------------------------\n'
+const (
+	request   = vibe.Request{}
+	separator = '\n-----------------------------------------------------------------------\n'
+)
 
-fn gen_opts(session vibe.Session) string {
-	body := session.get('https://curl.se/libcurl/c/easy_setopt_options.html') or {
+fn gen_opts() string {
+	body := request.get('https://curl.se/libcurl/c/easy_setopt_options.html') or {
 		panic('Error requesting options source: ${err}')
 	}.body
 	mut rows := html.parse(body).get_tag('table')[0].get_tags('tr')
@@ -28,8 +31,8 @@ module state
 ${opts}'
 }
 
-fn gen_codes(session vibe.Session) string {
-	body := session.get('https://curl.se/libcurl/c/libcurl-errors.html') or {
+fn gen_codes() string {
+	body := request.get('https://curl.se/libcurl/c/libcurl-errors.html') or {
 		panic('Error requesting errors source: ${err}')
 	}.body
 	mut doc := html.parse(body)
@@ -80,8 +83,8 @@ ${ue}\n
 ${h}'
 }
 
-fn gen_info(session vibe.Session) string {
-	body := session.get('https://curl.se/libcurl/c/easy_getinfo_options.html') or {
+fn gen_info() string {
+	body := request.get('https://curl.se/libcurl/c/easy_getinfo_options.html') or {
 		panic('Error requesting info options source: ${err}')
 	}.body
 	mut rows := html.parse(body).get_tag('table')[0].get_tags('tr')
@@ -104,13 +107,8 @@ module state
 ${info}'
 }
 
-session := vibe.init_session(vibe.SessionOpts{})!
-defer {
-	session.close()
-}
-
-println(gen_opts(session))
+println(gen_opts())
 println(separator)
-println(gen_codes(session))
+println(gen_codes())
 println(separator)
-println(gen_info(session))
+println(gen_info())
