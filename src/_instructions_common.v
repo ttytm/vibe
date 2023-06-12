@@ -34,9 +34,7 @@ fn (req Request) set_common_opts(h &C.CURL, url string, resp &Response) {
 fn send_request(handle &C.CURL) ! {
 	res := curl.easy_perform(handle)
 	if res != curl.Ecode.ok {
-		return IError(curl.CurlError{
-			e_code: res
-		})
+		return curl.curl_error(res)
 	}
 }
 
@@ -55,7 +53,5 @@ fn (mut resp Response) handle_redirect(h &C.CURL, max_redirects u16) ! {
 		}
 	}
 
-	return IError(HttpError{
-		kind: .max_redirs_reached
-	})
+	return http_error(.max_redirs_reached, none)
 }

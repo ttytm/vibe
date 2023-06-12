@@ -8,28 +8,17 @@ fn (mut resp Response) get_http_version() ! {
 	// Example: [0]: http/1.1 [1]: 200 [2]: OK
 	vals := status_line.split_nth(' ', 3)
 	if vals.len != 3 {
-		return IError(HttpError{
-			kind: .version
-			val: status_line
-		})
+		return http_error(.version, status_line)
 	}
 
 	version := vals[0][5..]
 	if version.len != 1 && (version != '2' || version != '3') {
 		maj_min_ver := version.split_nth('.', 3)
 		if maj_min_ver.len != 2 {
-			return IError(HttpError{
-				kind: .version
-				val: maj_min_ver.str()
-			})
+			return http_error(.version, maj_min_ver.str())
 		}
 		for ver in maj_min_ver {
-			strconv.atoi(ver) or {
-				return IError(HttpError{
-					kind: .version_segment
-					val: ver
-				})
-			}
+			strconv.atoi(ver) or { return http_error(.version, ver) }
 		}
 	}
 

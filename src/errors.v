@@ -25,3 +25,10 @@ fn (err HttpError) msg() string {
 		.max_redirs_reached { 'Maximum redirects reached' }
 	}
 }
+
+fn http_error(kind HttpErrorKind, val ?string) IError {
+	return IError(HttpError{
+		kind: kind
+		val: val or { '' }
+	})
+}

@@ -4,9 +4,7 @@ import vibe.curl
 
 fn (req Request) get_(url string) !Response {
 	// Curl handle
-	h := curl.easy_init() or { return IError(HttpError{
-		kind: .easy_init
-	}) }
+	h := curl.easy_init() or { return http_error(.easy_init, none) }
 	header := set_header(req.headers, h)
 	defer {
 		curl.easy_cleanup(h)
@@ -32,9 +30,7 @@ fn (req Request) get_(url string) !Response {
 }
 
 fn (req Request) get_slice_(url string, start usize, max_size_ ?usize) !Response {
-	h := curl.easy_init() or { return IError(HttpError{
-		kind: .easy_init
-	}) }
+	h := curl.easy_init() or { return http_error(.easy_init, none) }
 	header := set_header(req.headers, h)
 	defer {
 		curl.easy_cleanup(h)
@@ -51,9 +47,7 @@ fn (req Request) get_slice_(url string, start usize, max_size_ ?usize) !Response
 	req.set_get_opts(h, url, &resp)
 	res := curl.easy_perform(h)
 	if res != curl.Ecode.ok && !resp.slice.finished {
-		return IError(curl.CurlError{
-			e_code: res
-		})
+		return curl.curl_error(res)
 	}
 
 	mut status_code := 0
@@ -66,10 +60,7 @@ fn (req Request) get_slice_(url string, start usize, max_size_ ?usize) !Response
 
 	if resp.body.len == 0 {
 		slice_end := if max_size == 0 { resp.body.len } else { int(resp.slice.end) }
-		return IError(HttpError{
-			kind: .slice_out_of_range
-			val: '${start}..${slice_end}'
-		})
+		return http_error(.slice_out_of_range, '${start}..${slice_end}')
 	}
 
 	resp.get_http_version()!

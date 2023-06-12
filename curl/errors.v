@@ -2,26 +2,21 @@ module curl
 
 pub struct CurlError {
 	Error
-	kind     CurlErrorKind
-	e_code   Ecode
-	m_code   Mcode
-	she_code SHEcode
-	ue_code  UEcode
-	h_code   Hcode
+	curl_code CurlCode
 }
 
-pub enum CurlErrorKind {
-	easy
-	multi
-	share
-	url
-	header
-}
+pub type CurlCode = Ecode | Hcode | Mcode | SHEcode | UEcode
 
 fn (err CurlError) msg() string {
-	return match err.kind {
-		.easy { easy_strerror(err.e_code) }
+	return match err.curl_code {
+		Ecode { easy_strerror(err.curl_code) }
 		// TODO:
 		else { 'Currently unspecified curl error' }
 	}
+}
+
+pub fn curl_error(code CurlCode) IError {
+	return IError(CurlError{
+		curl_code: code
+	})
 }
