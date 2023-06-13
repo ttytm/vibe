@@ -33,9 +33,17 @@ Install via `v` cli
 ```v
 import vibe
 
-req := vibe.Request{}
-resp := req.get('https://hacker-news.firebaseio.com/v0/item/1.json')!
+resp := vibe.get('https://hacker-news.firebaseio.com/v0/item/1.json')!
 println(resp.body)
+
+// Customized request
+request := vibe.Request{
+	headers: {
+		.user_agent: 'YourCustomUserAgent/v0.0.1'
+	}
+}
+resp2 := request.get('https://hacker-news.firebaseio.com/v0/item/1.json')!
+println(resp2.body)
 ```
 
 **POST request**
@@ -62,7 +70,7 @@ println(resp)
 ```v
 import vibe
 
-vibe.Request{}.download_file('https://github.com/vlang/v/releases/download/weekly.2023.23/v_linux.zip',
+vibe.download_file('https://github.com/vlang/v/releases/download/weekly.2023.23/v_linux.zip',
 	'v_linux.zip')!
 ```
 
@@ -79,17 +87,14 @@ If optimizing speed is of concern when querying pages with large response bodies
 // Allocation of the received response as a vstring is postponed until the `start` byte position is reached.
 // The content is returned as soon as the slice reaches its `max_size` (offset from `start`)
 // - `max_size` can be `none` to return the remainder from the start.
-pub fn (req Request) get_slice(url string, start usize, size ?usize) !Response {
-	return req.get_slice_(url, start, size)!
-}
+pub fn (req Request) get_slice(url string, start usize, size ?usize) !Response
 ```
 
 ```v
 import vibe
 import net.html
 
-req := vibe.Request{}
-resp := req.get_slice('https://docs.vosca.dev/advanced-concepts/v-and-c.html', 65_000,
+resp := vibe.get_slice('https://docs.vosca.dev/advanced-concepts/v-and-c.html', 65_000,
 	10_000)!
 selector := html.parse(resp.body).get_tags_by_class_name('language-vmod')[0]
 println(selector.text())
