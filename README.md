@@ -100,7 +100,33 @@ selector := html.parse(resp.body).get_tags_by_class_name('language-vmod')[0]
 println(selector.text())
 ```
 
-<br>
+**Download with progress**
+
+```v
+// Downloads a document from the specified `url` and saves it to the specified `file_path`.
+// Takes a function argument with a `Download` struct, providing access to download `pos`, `size`, and `file_path`.
+// The callback is executed when the download stream receives data.
+pub fn download_file_with_progress(url string, file_path string, cb fn (Download)) !Response
+
+// ... as method of a customized request
+pub fn (req Request) download_file_with_progress(url string, file_path string, cb fn (Download)) !Response
+```
+
+```v
+import vibe
+import term
+
+fn print_progress(dl vibe.Download) {
+	term.clear_previous_line()
+	println('Downloading: ${dl.file_path}... ${f64(dl.pos) / dl.size * 100:.2f}%')
+	if dl.pos >= dl.size {
+		println('Download completed.')
+	}
+}
+
+vibe.download_file_with_progress('https://github.com/vlang/v/releases/download/weekly.2023.23/v_linux.zip',
+	'v_linux.zip', print_progress)!
+```
 
 **Persistent Cookie**
 
