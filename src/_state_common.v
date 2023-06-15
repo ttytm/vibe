@@ -1,7 +1,7 @@
 module vibe
 
-import time
 import vibe.curl.state
+import time
 
 pub struct Request {
 pub mut:

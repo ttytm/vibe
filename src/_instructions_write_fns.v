@@ -21,7 +21,6 @@ fn write_resp_header(data &char, size usize, nmemb usize, mut resp Response) usi
 fn write_resp_slice(data &char, size usize, nmemb usize, mut resp Response) usize {
 	n := size * nmemb
 	resp.pos += n
-
 	if resp.pos > resp.slice.start {
 		unsafe {
 			resp.body += data.vstring()
@@ -31,13 +30,11 @@ fn write_resp_slice(data &char, size usize, nmemb usize, mut resp Response) usiz
 			return 0
 		}
 	}
-
 	return n
 }
 
 fn write_download(data &char, size usize, nmemb usize, mut fw FileWriter) usize {
 	n := size * nmemb
-
 	unsafe {
 		if fw.file.is_opened {
 			fw.file.write_ptr_at(data, int(n), fw.pos)
