@@ -50,6 +50,20 @@ pub fn (req Request) download_file(url string, file_path string) !Response {
 	return req.download_file_(url, file_path)!
 }
 
+// Downloads a document from the specified `url` and saves it to the specified `file_path`.
+// Takes a function argument with a `Download` struct, providing access to download `pos`, `size`, and `file_path`.
+// The callback is executed when the download stream receives data.
+pub fn download_file_with_progress(url string, file_path string, cb fn (Download)) !Response {
+	return Request{}.download_file_with_progress_(url, file_path, cb)!
+}
+
+// Downloads a document from the specified `url` and saves it to the specified `file_path`.
+// Takes a function argument with a `Download` struct, providing access to download `pos`, `size`, and `file_path`.
+// The callback is executed when the download stream receives data.
+pub fn (req Request) download_file_with_progress(url string, file_path string, cb fn (Download)) !Response {
+	return req.download_file_with_progress_(url, file_path, cb)!
+}
+
 // Sends a POST request to the specified `url` and returns the response.
 pub fn post(url string, data string) !Response {
 	return Request{}.post_(url, data)!

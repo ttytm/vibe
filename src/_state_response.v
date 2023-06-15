@@ -20,6 +20,16 @@ pub mut:
 
 struct FileWriter {
 mut:
-	file os.File
-	pos  u64
+	file     os.File
+	pos      u64
+	cb       fn (Download)
+	download Download
+}
+
+pub struct Download {
+pub:
+	size      u64
+	file_path string
+pub mut:
+	pos u64
 }
