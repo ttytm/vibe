@@ -20,6 +20,7 @@ fn (req Request) download_file_(url string, file_path string) !Response {
 		file: file
 	}
 	curl.easy_setopt(h, .header, 0)
+	curl.easy_setopt(h, .httpget, 1)
 	curl.easy_setopt(h, .writefunction, write_download)
 	curl.easy_setopt(h, .writedata, &fw)
 	send_request(h)!
@@ -56,7 +57,6 @@ fn (req Request) download_file_with_progress_(url string, file_path string, cb f
 			file_path: file_path
 		}
 	}
-
 	curl.easy_setopt(h, .header, 0)
 	curl.easy_setopt(h, .httpget, 1)
 	curl.easy_setopt(h, .writefunction, write_download_with_progress)
