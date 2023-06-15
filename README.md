@@ -174,15 +174,16 @@ Vibe is in early development. Additional features will be added based on persona
 
 ### Planned
 
-- Download with progress
-- curl Proxy support
-- SSL options
-- Extend HTTP methods
-- Custom headers
+- [x] Download with progress
+- [ ] Custom headers
+- [ ] curl Proxy support
+- [ ] SSL options
+- [ ] Extend HTTP methods
 
 ### Considered
 
 - Additional curl-compatible formats beyond HTTP.
+- Expose response streams / io.Reader implementation
 
 Given that the project is being worked on in spare time, please excuse potential delays in replying due to limited time resources.
 Contributions like bug reports, stars, donations and suggestions are welcome alike!
