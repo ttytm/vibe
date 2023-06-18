@@ -22,14 +22,16 @@ struct FileWriter {
 mut:
 	file     os.File
 	pos      u64
-	cb       fn (Download)
+}
+
+struct ProgressWriter {
+	FileWriter
+mut:
+	size      u64
 	download Download
 }
 
-pub struct Download {
-pub:
-	size      u64
-	file_path string
-pub mut:
-	pos u64
+interface Download {
+	progress(u64, u64)
+	completed()
 }
