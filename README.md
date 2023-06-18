@@ -104,11 +104,11 @@ println(selector.text())
 
 ```v
 // Downloads a document from the specified `url` and saves it to the specified `file_path`.
-// `download` must implement a `progress(pos u64, size u64)`, and `completed()` method.
-pub fn download_file_with_progress(url string, file_path string, download Download) !Response {
+// `download` must implement a `progress(pos u64, size u64)`, and a `finish()` method.
+pub fn download_file_with_progress(url string, file_path string, download Download) !Response
 
-// ... as method of a customized request
-pub fn (req Request) download_file_with_progress(url string, file_path string, download Download) !Response {
+// ... or as method of a customized request
+pub fn (req Request) download_file_with_progress(url string, file_path string, download Download) !Response
 ```
 
 ```v
@@ -122,7 +122,7 @@ fn (dl Download) progress(pos u64, size u64) {
 	os.flush()
 }
 
-fn (dl Download) completed() {
+fn (dl Download) finish() {
 	println('\nDownload completed.')
 }
 

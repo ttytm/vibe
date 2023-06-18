@@ -59,7 +59,7 @@ fn (req Request) download_file_with_progress_(url string, file_path string, dl D
 	curl.easy_setopt(h, .writefunction, write_download_with_progress)
 	curl.easy_setopt(h, .writedata, &fw)
 	send_request(h)!
-	dl.completed()
+	dl.finish()
 
 	mut status_code := 0
 	curl.easy_getinfo(h, .response_code, &status_code)
