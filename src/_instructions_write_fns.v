@@ -44,15 +44,14 @@ fn write_download(data &char, size usize, nmemb usize, mut fw FileWriter) usize 
 	return n
 }
 
-fn write_download_with_progress(data &char, size u64, nmemb u64, mut fw FileWriter) u64 {
+fn write_download_with_progress(data &char, size u64, nmemb u64, mut w ProgressWriter) u64 {
 	n := size * nmemb
-	if fw.file.is_opened {
+	if w.file.is_opened {
 		unsafe {
-			fw.file.write_ptr_at(data, int(n), fw.pos)
+			w.file.write_ptr_at(data, int(n), w.pos)
 		}
-		fw.pos += n
-		fw.download.pos = fw.pos
-		fw.cb(fw.download)
+		w.pos += n
+		w.download.progress(w.pos, w.size)
 	}
 	return n
 }

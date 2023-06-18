@@ -104,28 +104,31 @@ println(selector.text())
 
 ```v
 // Downloads a document from the specified `url` and saves it to the specified `file_path`.
-// Takes a function argument with a `Download` struct, providing access to download `pos`, `size`, and `file_path`.
-// The callback is executed when the download stream receives data.
-pub fn download_file_with_progress(url string, file_path string, cb fn (Download)) !Response
+// `download` must implement a `progress(pos u64, size u64)`, and a `finish()` method.
+pub fn download_file_with_progress(url string, file_path string, download Download) !Response
 
-// ... as method of a customized request
-pub fn (req Request) download_file_with_progress(url string, file_path string, cb fn (Download)) !Response
+// ... or as method of a customized request
+pub fn (req Request) download_file_with_progress(url string, file_path string, download Download) !Response
 ```
 
 ```v
 import vibe
-import term
+import os
 
-fn print_progress(dl vibe.Download) {
-	term.clear_previous_line()
-	println('Downloading: ${dl.file_path}... ${f64(dl.pos) / dl.size * 100:.2f}%')
-	if dl.pos >= dl.size {
-		println('Download completed.')
-	}
+struct Download {}
+
+fn (dl Download) progress(pos u64, size u64) {
+	print('\rDownloading... ${f64(pos) / size * 100:.2f}%')
+	os.flush()
 }
 
-vibe.download_file_with_progress('https://github.com/vlang/v/releases/download/weekly.2023.23/v_linux.zip',
-	'v_linux.zip', print_progress)!
+fn (dl Download) finish() {
+	println('\nDownload completed.')
+}
+
+request := vibe.Request{}
+request.download_file_with_progress('https://github.com/vlang/v/releases/download/weekly.2023.23/v_linux.zip',
+	'v_linux.zip', Download{})!
 ```
 
 **Persistent Cookie**
