@@ -33,7 +33,7 @@ fn (req Request) download_file_(url string, file_path string) !Response {
 	return resp
 }
 
-fn (req Request) download_file_with_progress_(url string, file_path string, dl Download) !Response {
+fn (req Request) download_file_with_progress_(url string, file_path string, mut dl Download) !Response {
 	h := curl.easy_init() or { return http_error(.easy_init, none) }
 	header := set_header(req.headers, h)
 	defer {

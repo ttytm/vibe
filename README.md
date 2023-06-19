@@ -126,9 +126,9 @@ fn (dl Download) finish() {
 	println('\nDownload completed.')
 }
 
-request := vibe.Request{}
-request.download_file_with_progress('https://github.com/vlang/v/releases/download/weekly.2023.23/v_linux.zip',
-	'v_linux.zip', Download{})!
+mut dl := Download{}
+vibe.download_file_with_progress('https://github.com/vlang/v/releases/download/weekly.2023.23/v_linux.zip',
+	'v_linux.zip', mut dl)!
 ```
 
 **Persistent Cookie**
