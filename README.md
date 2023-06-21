@@ -33,10 +33,11 @@ Install via `v` cli
 ```v
 import vibe
 
+// Default request
 resp := vibe.get('https://hacker-news.firebaseio.com/v0/item/1.json')!
 println(resp.body)
 
-// Customized request
+// Custom request
 request := vibe.Request{
 	headers: {
 		.user_agent: 'YourCustomUserAgent/v0.0.1'
@@ -80,9 +81,10 @@ vibe.download_file('https://github.com/vlang/v/releases/download/weekly.2023.23/
 
 **GET Slice request**
 
-If optimizing speed is of concern when querying pages with large response bodies, and you know you only need a portion of them, you can perform a `get_slice` request.
+If optimizing speed is of concern when querying pages with large response bodies, and you know you
+only need a portion of them, you can perform a `get_slice` request.
 
-```v
+```v oksyntax
 // Sends a GET request to the specified `url` and returns a slice of the response content.
 // Allocation of the received response as a vstring is postponed until the `start` byte position is reached.
 // The content is returned as soon as the slice reaches its `max_size` (offset from `start`)
@@ -102,12 +104,9 @@ println(selector.text())
 
 **Download with progress**
 
-```v
+```v oksyntax
 // Downloads a document from the specified `url` and saves it to the specified `file_path`.
-// `download` must implement a `progress(pos u64, size u64)`, and a `finish()` method.
-pub fn download_file_with_progress(url string, file_path string, download Download) !Response
-
-// ... or as method of a customized request
+// `download` must implement a `progress(pos usize, size usize)`, and a `finish()` method.
 pub fn (req Request) download_file_with_progress(url string, file_path string, download Download) !Response
 ```
 
@@ -173,7 +172,8 @@ os.rm(cookie_jar)!
 
 ## Further information and upcoming features
 
-Vibe is in early development. Additional features will be added based on personal projects and sensible community needs.
+Vibe is in early development. Additional features will be added based on personal projects and
+sensible community needs.
 
 ### Planned
 
@@ -188,5 +188,6 @@ Vibe is in early development. Additional features will be added based on persona
 - Additional curl-compatible formats beyond HTTP.
 - Expose response streams / io.Reader implementation
 
-Given that the project is being worked on in spare time, please excuse potential delays in replying due to limited time resources.
-Contributions like bug reports, stars, donations and suggestions are welcome alike!
+Given that the project is being worked on in spare time, please excuse potential delays in replying
+due to limited time resources.
+Contributions like bug 🐛 reports, ⭐ stars and 💡 suggestions are welcome alike!
