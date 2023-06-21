@@ -16,6 +16,7 @@ mut:
 }
 
 interface Download {
+mut:
 	progress(u64, u64)
 	finish()
 }
