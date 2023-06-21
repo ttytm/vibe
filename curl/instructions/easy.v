@@ -28,7 +28,8 @@ pub fn easy_init() !&C.CURL {
 }
 
 pub fn easy_strerror(err_code state.Ecode) string {
+	str_err := &char(C.curl_easy_strerror(err_code))
 	unsafe {
-		return C.curl_easy_strerror(err_code).vstring()
+		return str_err.vstring()
 	}
 }
