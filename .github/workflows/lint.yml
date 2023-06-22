@@ -44,6 +44,9 @@ jobs:
 
       - name: Checkout ${{ github.event.repository.name }}
         uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          path: ${{ env.GHA_PATH }}
 
-      - name: Vet Code
-        run: v vet -W src/
+      - name: Vet ${{ github.event.repository.name }}
+        run: v vet -W ${{ env.GHA_PATH }}/src/

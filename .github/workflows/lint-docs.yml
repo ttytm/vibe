@@ -2,7 +2,6 @@ name: Lint Docs
 
 on:
   push:
-    branches: [main]
     paths: ['**/*.md', '**/*.yml']
   pull_request:
 
@@ -19,11 +18,20 @@ jobs:
           path: ${{ env.WORK_PATH }}vlang/
           key: vlang-nightly
 
+      - name: Setup dependencies
+        run: sudo apt install libcurl4-openssl-dev
+
       - name: Setup V
         uses: vlang/setup-v@v1.3
 
+      - name: Install vmodule
+        run: v install --git https://github.com/tobealive/vibe
+
       - name: Checkout ${{ github.event.repository.name }}
         uses: actions/checkout@v3
+        with:
+          path: ${{ env.GHA_PATH }}
+          persist-credentials: false
 
       - name: Check Markdown
-        run: v check-md -hide-warnings .
+        run: v check-md -hide-warnings ${{ env.GHA_PATH }}
