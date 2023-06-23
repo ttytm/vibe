@@ -6,8 +6,8 @@ pub enum Info {
 	activesocket = C.CURLINFO_ACTIVESOCKET //  get the active socket
 	appconnect_time = C.CURLINFO_APPCONNECT_TIME //  get the time until the SSL/SSH handshake is completed
 	appconnect_time_t = C.CURLINFO_APPCONNECT_TIME_T //  time until the SSL/SSH handshake completed
-	cainfo = C.CURLINFO_CAINFO //  get the default built-in CA certificate path
-	capath = C.CURLINFO_CAPATH //  get the default built-in CA path string
+	// cainfo = C.CURLINFO_CAINFO //  get the default built-in CA certificate path
+	// capath = C.CURLINFO_CAPATH //  get the default built-in CA path string
 	certinfo = C.CURLINFO_CERTINFO //  get the TLS certificate chain
 	condition_unmet = C.CURLINFO_CONDITION_UNMET //  get info on unmet time conditional or 304 HTTP response.
 	connect_time = C.CURLINFO_CONNECT_TIME //  get the time until connect

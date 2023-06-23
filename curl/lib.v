@@ -13,7 +13,7 @@ pub type SHEcode = state.SHEcode
 
 pub type UEcode = state.UEcode
 
-pub type Hcode = state.Hcode
+// pub type Hcode = state.Hcode
 
 pub type GlobalInitFlag = state.GlobalInitFlag
 

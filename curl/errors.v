@@ -5,7 +5,7 @@ pub struct CurlError {
 	curl_code CurlCode
 }
 
-pub type CurlCode = Ecode | Hcode | Mcode | SHEcode | UEcode
+pub type CurlCode = Ecode | /*Hcode |*/ Mcode | SHEcode | UEcode
 
 fn (err CurlError) msg() string {
 	return match err.curl_code {

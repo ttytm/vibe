@@ -16,7 +16,7 @@ enum Opt {
 	cainfo = C.CURLOPT_CAINFO //  path to Certificate Authority (CA) bundle
 	cainfo_blob = C.CURLOPT_CAINFO_BLOB //  Certificate Authority (CA) bundle in PEM format
 	capath = C.CURLOPT_CAPATH //  directory holding CA certificates
-	ca_cache_timeout = C.CURLOPT_CA_CACHE_TIMEOUT //  life-time for cached certificate stores
+	// ca_cache_timeout = C.CURLOPT_CA_CACHE_TIMEOUT //  life-time for cached certificate stores
 	certinfo = C.CURLOPT_CERTINFO //  request SSL certificate information
 	chunk_bgn_function = C.CURLOPT_CHUNK_BGN_FUNCTION //  callback before a transfer with FTP wildcard match
 	chunk_data = C.CURLOPT_CHUNK_DATA //  pointer passed to the FTP chunk callbacks
@@ -42,7 +42,7 @@ enum Opt {
 	customrequest = C.CURLOPT_CUSTOMREQUEST //  custom request method
 	debugdata = C.CURLOPT_DEBUGDATA //  pointer passed to the debug callback
 	debugfunction = C.CURLOPT_DEBUGFUNCTION //  debug callback
-	default_protocol = C.CURLOPT_DEFAULT_PROTOCOL //  default protocol to use if the URL is missing a
+	// default_protocol = C.CURLOPT_DEFAULT_PROTOCOL //  default protocol to use if the URL is missing a
 	dirlistonly = C.CURLOPT_DIRLISTONLY //  ask for names only in a directory listing
 	disallow_username_in_url = C.CURLOPT_DISALLOW_USERNAME_IN_URL //  disallow specifying username in the URL
 	dns_cache_timeout = C.CURLOPT_DNS_CACHE_TIMEOUT //  life-time for DNS cache entries
@@ -162,7 +162,7 @@ enum Opt {
 	progressdata = C.CURLOPT_PROGRESSDATA //  pointer passed to the progress callback
 	progressfunction = C.CURLOPT_PROGRESSFUNCTION //  progress meter callback
 	protocols = C.CURLOPT_PROTOCOLS //  allowed protocols
-	protocols_str = C.CURLOPT_PROTOCOLS_STR //  allowed protocols
+	// protocols_str = C.CURLOPT_PROTOCOLS_STR //  allowed protocols
 	proxy = C.CURLOPT_PROXY //  proxy to use
 	proxyauth = C.CURLOPT_PROXYAUTH //  HTTP proxy authentication methods
 	proxyheader = C.CURLOPT_PROXYHEADER //  set of HTTP headers to pass to proxy
@@ -197,14 +197,14 @@ enum Opt {
 	proxy_tlsauth_username = C.CURLOPT_PROXY_TLSAUTH_USERNAME //  user name to use for proxy TLS authentication
 	proxy_transfer_mode = C.CURLOPT_PROXY_TRANSFER_MODE //  append FTP transfer mode to URL for proxy
 	put = C.CURLOPT_PUT //  make an HTTP PUT request
-	quick_exit = C.CURLOPT_QUICK_EXIT //  allow to exit quickly
+	// quick_exit = C.CURLOPT_QUICK_EXIT //  allow to exit quickly
 	quote = C.CURLOPT_QUOTE //  (S)FTP commands to run before transfer
 	random_file = C.CURLOPT_RANDOM_FILE //  file to read random data from
 	range = C.CURLOPT_RANGE //  byte range to request
 	readdata = C.CURLOPT_READDATA //  pointer passed to the read callback
 	readfunction = C.CURLOPT_READFUNCTION //  read callback for data uploads
 	redir_protocols = C.CURLOPT_REDIR_PROTOCOLS //  protocols allowed to redirect to
-	redir_protocols_str = C.CURLOPT_REDIR_PROTOCOLS_STR //  protocols allowed to redirect to
+	// redir_protocols_str = C.CURLOPT_REDIR_PROTOCOLS_STR //  protocols allowed to redirect to
 	referer = C.CURLOPT_REFERER //  the HTTP referer header
 	request_target = C.CURLOPT_REQUEST_TARGET //  alternative target for this request
 	resolve = C.CURLOPT_RESOLVE //  provide custom host name to IP address resolves
@@ -232,8 +232,8 @@ enum Opt {
 	socks5_gssapi_service = C.CURLOPT_SOCKS5_GSSAPI_SERVICE //  SOCKS5 proxy authentication service name
 	ssh_auth_types = C.CURLOPT_SSH_AUTH_TYPES //  auth types for SFTP and SCP
 	ssh_compression = C.CURLOPT_SSH_COMPRESSION //  enable SSH compression
-	ssh_hostkeydata = C.CURLOPT_SSH_HOSTKEYDATA //  pointer to pass to the SSH host key callback
-	ssh_hostkeyfunction = C.CURLOPT_SSH_HOSTKEYFUNCTION //  callback to check host key
+	// ssh_hostkeydata = C.CURLOPT_SSH_HOSTKEYDATA //  pointer to pass to the SSH host key callback
+	// ssh_hostkeyfunction = C.CURLOPT_SSH_HOSTKEYFUNCTION //  callback to check host key
 	ssh_host_public_key_md5 = C.CURLOPT_SSH_HOST_PUBLIC_KEY_MD5 //  MD5 checksum of SSH server public key
 	ssh_host_public_key_sha256 = C.CURLOPT_SSH_HOST_PUBLIC_KEY_SHA256 //  SHA256 hash of SSH server public key
 	ssh_keydata = C.CURLOPT_SSH_KEYDATA //  pointer passed to the SSH key callback
@@ -302,7 +302,7 @@ enum Opt {
 	wildcardmatch = C.CURLOPT_WILDCARDMATCH //  directory wildcard transfers
 	writedata = C.CURLOPT_WRITEDATA //  pointer passed to the write callback
 	writefunction = C.CURLOPT_WRITEFUNCTION //  callback for writing received data
-	ws_options = C.CURLOPT_WS_OPTIONS //  WebSocket behavior options
+	// ws_options = C.CURLOPT_WS_OPTIONS //  WebSocket behavior options
 	xferinfodata = C.CURLOPT_XFERINFODATA //  pointer passed to the progress callback
 	xferinfofunction = C.CURLOPT_XFERINFOFUNCTION //  progress meter callback
 	xoauth2_bearer = C.CURLOPT_XOAUTH2_BEARER //  OAuth 2.0 access token

@@ -89,8 +89,8 @@ pub enum Ecode {
 	quic_connect_error = C.CURLE_QUIC_CONNECT_ERROR
 	proxy = C.CURLE_PROXY
 	ssl_clientcert = C.CURLE_SSL_CLIENTCERT
-	unrecoverable_poll = C.CURLE_UNRECOVERABLE_POLL
-	writefunc_error = C.CURL_WRITEFUNC_ERROR
+	// unrecoverable_poll = C.CURLE_UNRECOVERABLE_POLL
+	// writefunc_error = C.CURL_WRITEFUNC_ERROR
 }
 
 enum Mcode {
@@ -108,7 +108,7 @@ enum Mcode {
 	wakeup_failure = C.CURLM_WAKEUP_FAILURE
 	bad_function_argument = C.CURLM_BAD_FUNCTION_ARGUMENT
 	aborted_by_callback = C.CURLM_ABORTED_BY_CALLBACK
-	unrecoverable_poll = C.CURLM_UNRECOVERABLE_POLL
+	// unrecoverable_poll = C.CURLM_UNRECOVERABLE_POLL
 }
 
 pub enum SHEcode {
@@ -152,6 +152,7 @@ enum UEcode {
 	bad_user = C.CURLUE_BAD_USER
 }
 
+/*
 enum Hcode {
 	curlhe_badindex = C.CURLHE_BADINDEX
 	curlhe_missing = C.CURLHE_MISSING
@@ -160,4 +161,4 @@ enum Hcode {
 	curlhe_out_of_memory = C.CURLHE_OUT_OF_MEMORY
 	curlhe_bad_argument = C.CURLHE_BAD_ARGUMENT
 	curlhe_not_built_in = C.CURLHE_NOT_BUILT_IN
-}
+}*/
