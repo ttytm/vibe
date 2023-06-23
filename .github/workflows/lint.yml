@@ -28,7 +28,7 @@ jobs:
         run: cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
 
       - name: Check Formatting
-        run: v fmt -verify .
+        run: v fmt -verify ${{ env.MOD_PATH }}
 
   vet:
     runs-on: ubuntu-latest
@@ -47,4 +47,4 @@ jobs:
         uses: vlang/setup-v@v1.3
 
       - name: Vet ${{ github.event.repository.name }}
-        run: v vet -W src/
+        run: v vet -W ${{ env.MOD_PATH }}/src/
