@@ -11,6 +11,9 @@ jobs:
   fmt:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout ${{ github.event.repository.name }}
+        uses: actions/checkout@v3
+
       - name: Restore Cache
         uses: actions/cache/restore@v3
         with:
@@ -21,9 +24,6 @@ jobs:
       - name: Setup V
         uses: vlang/setup-v@v1.3
 
-      - name: Checkout ${{ github.event.repository.name }}
-        uses: actions/checkout@v3
-
       - name: Setup dependencies
         run: cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
 
@@ -33,6 +33,9 @@ jobs:
   vet:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout ${{ github.event.repository.name }}
+        uses: actions/checkout@v3
+
       - name: Restore V Cache
         uses: actions/cache/restore@v3
         with:
@@ -42,9 +45,6 @@ jobs:
 
       - name: Setup V
         uses: vlang/setup-v@v1.3
-
-      - name: Checkout ${{ github.event.repository.name }}
-        uses: actions/checkout@v3
 
       - name: Vet ${{ github.event.repository.name }}
         run: v vet -W src/
