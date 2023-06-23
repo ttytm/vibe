@@ -53,16 +53,16 @@ jobs:
       - name: Setup V
         uses: vlang/setup-v@v1.3
 
-      - name: Setup libcurl
-        run: sudo apt install libcurl4-openssl-dev
+      - name: Setup dependencies
+        run: |
+          sudo apt install libcurl4-openssl-dev
+          cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
 
       - name: Checkout ${{ github.event.repository.name }}
         uses: actions/checkout@v3
 
       - name: ${{ matrix.trimming }} build
-        run: |
-          cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
-          v -cg -shared ${{ matrix.trimming }} ${{ matrix.optimization }} ${{ env.MOD_PATH }}
+        run: v -cg -shared ${{ matrix.trimming }} ${{ matrix.optimization }} ${{ env.MOD_PATH }}
 
   test:
     needs: simple-build
@@ -78,16 +78,16 @@ jobs:
       - name: Setup V
         uses: vlang/setup-v@v1.3
 
-      - name: Setup libcurl
-        run: sudo apt install libcurl4-openssl-dev
+      - name: Setup dependencies
+        run: |
+          sudo apt install libcurl4-openssl-dev
+          cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
 
       - name: Checkout ${{ github.event.repository.name }}
         uses: actions/checkout@v3
 
       - name: Run tests
-        run: |
-          cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
-          v test ${{ env.MOD_PATH }}
+        run: v test ${{ env.MOD_PATH }}
 
   setup-clang:
     needs: [lint, test]
@@ -132,8 +132,10 @@ jobs:
       - name: Setup V
         uses: vlang/setup-v@v1.3
 
-      - name: Setup libcurl
-        run: sudo apt install libcurl4-openssl-dev
+      - name: Setup dependencies
+        run: |
+          sudo apt install libcurl4-openssl-dev
+          cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
 
       - if: ${{ matrix.compiler == 'gcc' }}
         name: Setup GCC
@@ -167,9 +169,7 @@ jobs:
 
       - if: ${{ matrix.compiler == 'gcc' }}
         name: ${{ matrix.compiler }} ${{ matrix.trimming }} ${{ matrix.optimization }} build
-        run: |
-          cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
-          v -cg -shared -cc ${{ matrix.compiler }} ${{ matrix.trimming }} ${{ matrix.optimization }} ${{ env.MOD_PATH }}
+        run: v -cg -shared -cc ${{ matrix.compiler }} ${{ matrix.trimming }} ${{ matrix.optimization }} ${{ env.MOD_PATH }}
 
   clang-sanitizers:
     needs: different-compilers
@@ -188,8 +188,10 @@ jobs:
       - name: Setup V
         uses: vlang/setup-v@v1.3
 
-      - name: Setup libcurl
-        run: sudo apt install libcurl4-openssl-dev
+      - name: Setup dependencies
+        run: |
+          sudo apt install libcurl4-openssl-dev
+          cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
 
       - name: Restore LLVM and Clang Cache
         uses: actions/cache/restore@v3
@@ -208,9 +210,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Clang ${{ matrix.sanitizer }} sanitizer
-        run: |
-          cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
-          v -cc clang -cflags -fsanitize=${{ matrix.sanitizer }} test ${{ env.MOD_PATH }}
+        run: v -cc clang -cflags -fsanitize=${{ matrix.sanitizer }} test ${{ env.MOD_PATH }}
 
   gcc-sanitizers:
     needs: different-compilers
@@ -229,8 +229,10 @@ jobs:
       - name: Setup V
         uses: vlang/setup-v@v1.3
 
-      - name: Setup libcurl
-        run: sudo apt install libcurl4-openssl-dev
+      - name: Setup dependencies
+        run: |
+          sudo apt install libcurl4-openssl-dev
+          cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
 
       - name: Set up GCC
         run: |
@@ -241,9 +243,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: GCC ${{ matrix.sanitizer }} sanitizer
-        run: |
-          cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
-          v -cc gcc -cflags -fsanitize=${{ matrix.sanitizer }} test ${{ env.MOD_PATH }}
+        run: v -cc gcc -cflags -fsanitize=${{ matrix.sanitizer }} test ${{ env.MOD_PATH }}
 
   gcc-address-sanitizers:
     needs: different-compilers
@@ -287,8 +287,10 @@ jobs:
       - name: Setup V
         uses: vlang/setup-v@v1.3
 
-      - name: Setup libcurl
-        run: sudo apt install libcurl4-openssl-dev
+      - name: Setup dependencies
+        run: |
+          sudo apt install libcurl4-openssl-dev
+          cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
 
       - name: Set up GCC
         run: |
@@ -299,6 +301,4 @@ jobs:
         uses: actions/checkout@v3
 
       - name: GCC undefined sanitizer
-        run: |
-          cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
-          v -cc gcc -cflags -fsanitize=undefined -cflags -fsanitize=shift -cflags -fsanitize=shift-exponent -cflags -fsanitize=shift-base -cflags -fsanitize=integer-divide-by-zero -cflags -fsanitize=unreachable -cflags -fsanitize=vla-bound -cflags -fsanitize=null -cflags -fsanitize=return -cflags -fsanitize=signed-integer-overflow -cflags -fsanitize=bounds -cflags -fsanitize=bounds-strict -cflags -fsanitize=alignment -cflags -fsanitize=object-size -cflags -fsanitize=float-divide-by-zero -cflags -fsanitize=float-cast-overflow -cflags -fsanitize=nonnull-attribute -cflags -fsanitize=returns-nonnull-attribute -cflags -fsanitize=bool -cflags -fsanitize=enum -cflags -fsanitize=vptr -cflags -fsanitize=pointer-overflow -cflags -fsanitize=builtin test ${{ env.MOD_PATH }}
+        run: v -cc gcc -cflags -fsanitize=undefined -cflags -fsanitize=shift -cflags -fsanitize=shift-exponent -cflags -fsanitize=shift-base -cflags -fsanitize=integer-divide-by-zero -cflags -fsanitize=unreachable -cflags -fsanitize=vla-bound -cflags -fsanitize=null -cflags -fsanitize=return -cflags -fsanitize=signed-integer-overflow -cflags -fsanitize=bounds -cflags -fsanitize=bounds-strict -cflags -fsanitize=alignment -cflags -fsanitize=object-size -cflags -fsanitize=float-divide-by-zero -cflags -fsanitize=float-cast-overflow -cflags -fsanitize=nonnull-attribute -cflags -fsanitize=returns-nonnull-attribute -cflags -fsanitize=bool -cflags -fsanitize=enum -cflags -fsanitize=vptr -cflags -fsanitize=pointer-overflow -cflags -fsanitize=builtin test ${{ env.MOD_PATH }}

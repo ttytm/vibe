@@ -5,6 +5,7 @@ on:
 
 env:
   WORK_PATH: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/
+  MOD_PATH: ~/.vmodules/vibe/
 
 jobs:
   fmt:
@@ -22,6 +23,9 @@ jobs:
 
       - name: Checkout ${{ github.event.repository.name }}
         uses: actions/checkout@v3
+
+      - name: Setup dependencies
+        run: cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
 
       - name: Check Formatting
         run: v fmt -verify .
