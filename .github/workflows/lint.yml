@@ -11,9 +11,6 @@ jobs:
   fmt:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout ${{ github.event.repository.name }}
-        uses: actions/checkout@v3
-
       - name: Restore Cache
         uses: actions/cache/restore@v3
         with:
@@ -24,7 +21,13 @@ jobs:
       - name: Setup V
         uses: vlang/setup-v@v1.3
 
-      - name: Setup dependencies
+      - name: Setup libcurl
+        run: sudo apt install libcurl4-openssl-dev
+
+      - name: Checkout ${{ github.event.repository.name }}
+        uses: actions/checkout@v3
+
+      - name: Copy ${{ github.event.repository.name }} to .vmodules
         run: cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
 
       - name: Check Formatting
@@ -33,9 +36,6 @@ jobs:
   vet:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout ${{ github.event.repository.name }}
-        uses: actions/checkout@v3
-
       - name: Restore V Cache
         uses: actions/cache/restore@v3
         with:
@@ -45,6 +45,15 @@ jobs:
 
       - name: Setup V
         uses: vlang/setup-v@v1.3
+
+      - name: Setup libcurl
+        run: sudo apt install libcurl4-openssl-dev
+
+      - name: Checkout ${{ github.event.repository.name }}
+        uses: actions/checkout@v3
+
+      - name: Copy ${{ github.event.repository.name }} to .vmodules
+        run: cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
 
       - name: Vet ${{ github.event.repository.name }}
         run: v vet -W ${{ env.MOD_PATH }}/src/
