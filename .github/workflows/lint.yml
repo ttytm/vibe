@@ -5,7 +5,6 @@ on:
 
 env:
   WORK_PATH: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/
-  GHA_PATH: ${{ github.event.repository.name }}-gha
 
 jobs:
   fmt:
@@ -23,11 +22,9 @@ jobs:
 
       - name: Checkout ${{ github.event.repository.name }}
         uses: actions/checkout@v3
-        with:
-          path: ${{ env.GHA_PATH }}
 
       - name: Check Formatting
-        run: v fmt -verify ${{ env.GHA_PATH }}
+        run: v fmt -verify .
 
   vet:
     runs-on: ubuntu-latest
@@ -44,9 +41,6 @@ jobs:
 
       - name: Checkout ${{ github.event.repository.name }}
         uses: actions/checkout@v3
-        with:
-          persist-credentials: false
-          path: ${{ env.GHA_PATH }}
 
       - name: Vet ${{ github.event.repository.name }}
-        run: v vet -W ${{ env.GHA_PATH }}/src/
+        run: v vet -W src/
