@@ -28,7 +28,7 @@ Install via `v` cli
 
 ## Usage examples
 
-**GET request**
+#### GET request
 
 ```v
 import vibe
@@ -47,7 +47,7 @@ resp2 := request.get('https://hacker-news.firebaseio.com/v0/item/1.json')!
 println(resp2.body)
 ```
 
-**POST request**
+#### POST request
 
 ```v
 import vibe
@@ -66,7 +66,7 @@ resp := req.post('https://httpbin.org/post', '{"msg":"hello from vibe"}')!
 println(resp)
 ```
 
-**Download**
+#### Download
 
 ```v
 import vibe
@@ -79,7 +79,7 @@ vibe.download_file('https://github.com/vlang/v/releases/download/weekly.2023.23/
 
 <br>
 
-**GET Slice request**
+#### GET Slice request
 
 If optimizing speed is of concern when querying pages with large response bodies, and you know you
 only need a portion of them, you can perform a `get_slice` request.
@@ -102,7 +102,7 @@ selector := html.parse(resp.body).get_tags_by_class_name('language-vmod')[0]
 println(selector.text())
 ```
 
-**Download with progress**
+#### Download with progress
 
 ```v oksyntax
 // Downloads a document from the specified `url` and saves it to the specified `file_path`.
@@ -130,7 +130,7 @@ vibe.download_file_with_progress('https://github.com/vlang/v/releases/download/w
 	'v_linux.zip', mut dl)!
 ```
 
-**Persistent Cookie**
+#### Persistent Cookie
 
 Share cookies between requests / sessions with a curl cookie jar file.
 
