@@ -6,7 +6,7 @@ import time
 pub struct Request {
 pub mut:
 	headers        map[HttpHeader]string
-	custom_headers map[string]string // TODO:
+	custom_headers map[string]string
 	cookie_jar     string
 	cookie_file    string
 	timeout        time.Duration

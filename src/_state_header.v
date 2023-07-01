@@ -4,6 +4,12 @@ type HeaderList = C.curl_slist
 
 type Status = int
 
+[params]
+struct HttpHeaders {
+	common map[HttpHeader]string
+	custom map[string]string
+}
+
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
 [generated]
 pub enum HttpHeader {
