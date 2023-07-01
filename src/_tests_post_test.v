@@ -1,12 +1,16 @@
 module vibe
 
 import time
+import x.json2 as json
 
 fn test_post() {
 	req := Request{
 		headers: {
 			.user_agent:   'YourCustomUserAgent/v0.0.1'
 			.content_type: 'application/json; charset=utf-8'
+		}
+		custom_headers: {
+			'My-Custom-Header': 'FooBar'
 		}
 		timeout: time.second * 10
 	}
@@ -17,6 +21,10 @@ fn test_post() {
 	}
 
 	assert resp.status == 200
-	assert resp.body.contains('"User-Agent": "YourCustomUserAgent/v0.0.1"')
-	assert resp.body.contains('"msg": "hello from vibe"')
+	raw_json_resp := json.raw_decode(resp.body)!.as_map()
+	headers := raw_json_resp['headers']!.as_map()
+	assert headers['My-Custom-Header']!.str() == 'FooBar'
+	assert headers['User-Agent']!.str() == 'YourCustomUserAgent/v0.0.1'
+	json_data := raw_json_resp['json']!.as_map()
+	assert json_data['msg']!.str() == 'hello from vibe'
 }

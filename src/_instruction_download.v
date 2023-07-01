@@ -5,7 +5,7 @@ import vibe.curl
 
 fn (req Request) download_file_(url string, file_path string) !Response {
 	h := curl.easy_init() or { return http_error(.easy_init, none) }
-	header := set_header(req.headers, h)
+	header := set_header(h, common: req.headers, custom: req.custom_headers)
 	defer {
 		curl.easy_cleanup(h)
 		curl.slist_free_all(header)
@@ -35,7 +35,7 @@ fn (req Request) download_file_(url string, file_path string) !Response {
 
 fn (req Request) download_file_with_progress_(url string, file_path string, mut dl Download) !Response {
 	h := curl.easy_init() or { return http_error(.easy_init, none) }
-	header := set_header(req.headers, h)
+	header := set_header(h, common: req.headers, custom: req.custom_headers)
 	defer {
 		curl.easy_cleanup(h)
 		curl.slist_free_all(header)

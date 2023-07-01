@@ -4,7 +4,7 @@ import vibe.curl
 
 fn (req Request) post_(url string, data string) !Response {
 	h := curl.easy_init() or { return http_error(.easy_init, none) }
-	header := set_header(req.headers, h)
+	header := set_header(h, common: req.headers, custom: req.custom_headers)
 	defer {
 		curl.easy_cleanup(h)
 		curl.slist_free_all(header)
