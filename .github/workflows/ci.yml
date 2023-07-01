@@ -14,7 +14,15 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-      - name: Install V
+      - name: Cache Status
+        id: cache-status
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.WORK_PATH }}vlang/
+          key: ${{ runner.os }}-v-
+
+      - if: ${{ steps.cache-status.outputs.cache-hit != 'true' }}
+        name: Install V
         uses: vlang/setup-v@v1.3
         with:
           check-latest: true

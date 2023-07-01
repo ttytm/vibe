@@ -8,6 +8,33 @@ env:
   MOD_PATH: ~/.vmodules/vibe/
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Status
+        id: cache-status
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.WORK_PATH }}vlang/
+          key: ${{ runner.os }}-v-
+
+      - if: ${{ steps.cache-status.outputs.cache-hit != 'true' }}
+        name: Install V
+        uses: vlang/setup-v@v1.3
+        with:
+          check-latest: true
+
+      - if: ${{ steps.cache-status.outputs.cache-hit != 'true' }}
+        name: Add V Version to Environment
+        run: echo "V_VER=$(v -v)" >> $GITHUB_ENV
+
+      - if: ${{ steps.cache-status.outputs.cache-hit != 'true' }}
+        name: Cache V
+        uses: actions/cache/save@v3
+        with:
+          path: vlang/
+          key: ${{ runner.os }}-v-${{ env.V_VER }}
+
   fmt:
     runs-on: ubuntu-latest
     steps:
