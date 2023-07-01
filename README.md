@@ -61,7 +61,6 @@ req := vibe.Request{
 	timeout: time.second * 10
 }
 
-// NOTE: httpbin can be slow to respond at times
 resp := req.post('https://httpbin.org/post', '{"msg":"hello from vibe"}')!
 println(resp)
 ```
@@ -178,7 +177,7 @@ sensible community needs.
 ### Planned
 
 - [x] Download with progress
-- [ ] Custom headers
+- [x] Custom headers
 - [ ] curl Proxy support
 - [ ] SSL options
 - [ ] Extend HTTP methods
