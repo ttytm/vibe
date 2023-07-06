@@ -2,7 +2,7 @@ module vibe
 
 import v.vmod
 
-const manifest = vmod.decode($embed_file('../v.mod').to_string()) or { panic(err) }
+const manifest = vmod.decode(@VMOD_FILE) or { panic(err) }
 
 // get sends a GET request to the specified `url` and returns the response.
 pub fn get(url string) !Response {
