@@ -7,7 +7,6 @@ on:
     paths-ignore: ['**/*.md']
 
 env:
-  WORK_PATH: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/
   MOD_PATH: ~/.vmodules/vibe
 
 jobs:
@@ -18,7 +17,7 @@ jobs:
         id: cache-status
         uses: actions/cache@v3
         with:
-          path: ${{ env.WORK_PATH }}vlang/
+          path: vlang
           key: ${{ runner.os }}-v-
 
       - if: ${{ steps.cache-status.outputs.cache-hit != 'true' }}
@@ -35,7 +34,7 @@ jobs:
         name: Cache V
         uses: actions/cache/save@v3
         with:
-          path: vlang/
+          path: vlang
           key: ${{ runner.os }}-v-${{ env.V_VER }}
 
   lint:
@@ -52,7 +51,7 @@ jobs:
       - name: Restore V Cache
         uses: actions/cache/restore@v3
         with:
-          path: vlang/
+          path: vlang
           key: ${{ runner.os }}-v-
           fail-on-cache-miss: true
 
@@ -64,9 +63,11 @@ jobs:
 
       - name: Checkout ${{ github.event.repository.name }}
         uses: actions/checkout@v3
+        with:
+          path: ${{ github.event.repository.name }}
 
       - name: Copy ${{ github.event.repository.name }} to .vmodules
-        run: cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
+        run: cp -r ${{ github.event.repository.name }} ${{ env.MOD_PATH }}
 
       - name: ${{ matrix.optimization }} build
         run: v -cg -shared ${{ matrix.optimization }} ${{ env.MOD_PATH }}
@@ -78,7 +79,7 @@ jobs:
       - name: Restore V Cache
         uses: actions/cache/restore@v3
         with:
-          path: ${{ env.WORK_PATH }}vlang/
+          path: vlang
           key: ${{ runner.os }}-v-
           fail-on-cache-miss: true
 
@@ -90,9 +91,11 @@ jobs:
 
       - name: Checkout ${{ github.event.repository.name }}
         uses: actions/checkout@v3
+        with:
+          path: ${{ github.event.repository.name }}
 
       - name: Copy ${{ github.event.repository.name }} to .vmodules
-        run: cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
+        run: cp -r ${{ github.event.repository.name }} ${{ env.MOD_PATH }}
 
       - name: Run tests
         run: v test ${{ env.MOD_PATH }}
@@ -108,7 +111,7 @@ jobs:
       - name: Restore V Cache
         uses: actions/cache/restore@v3
         with:
-          path: ${{ env.WORK_PATH }}vlang/
+          path: vlang
           key: ${{ runner.os }}-v-
           fail-on-cache-miss: true
 
@@ -120,9 +123,11 @@ jobs:
 
       - name: Checkout ${{ github.event.repository.name }}
         uses: actions/checkout@v3
+        with:
+          path: ${{ github.event.repository.name }}
 
       - name: Copy ${{ github.event.repository.name }} to .vmodules
-        run: cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
+        run: cp -r ${{ github.event.repository.name }} ${{ env.MOD_PATH }}
 
       - name: ${{ matrix.compiler }} ${{ matrix.optimization }} build
         run: v -cg -shared -cc ${{ matrix.compiler }} ${{ matrix.optimization }} ${{ env.MOD_PATH }}
@@ -137,7 +142,7 @@ jobs:
       - name: Restore V Cache
         uses: actions/cache/restore@v3
         with:
-          path: ${{ env.WORK_PATH }}vlang/
+          path: vlang
           key: ${{ runner.os }}-v-
           fail-on-cache-miss: true
 
@@ -149,9 +154,11 @@ jobs:
 
       - name: Checkout ${{ github.event.repository.name }}
         uses: actions/checkout@v3
+        with:
+          path: ${{ github.event.repository.name }}
 
       - name: Copy ${{ github.event.repository.name }} to .vmodules
-        run: cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
+        run: cp -r ${{ github.event.repository.name }} ${{ env.MOD_PATH }}
 
       - name: GCC ${{ matrix.sanitizer }} sanitizer
         run: v -cc gcc -cflags -fsanitize=${{ matrix.sanitizer }} test ${{ env.MOD_PATH }}
