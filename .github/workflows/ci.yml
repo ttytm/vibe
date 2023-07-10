@@ -47,8 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        trimming: [null, -skip-unused]
-        optimization: [null, -cstrict]
+        optimization: ['', -cstrict]
     steps:
       - name: Restore V Cache
         uses: actions/cache/restore@v3
@@ -69,8 +68,8 @@ jobs:
       - name: Copy ${{ github.event.repository.name }} to .vmodules
         run: cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
 
-      - name: ${{ matrix.trimming }} build
-        run: v -cg -shared ${{ matrix.trimming }} ${{ matrix.optimization }} ${{ env.MOD_PATH }}
+      - name: ${{ matrix.optimization }} build
+        run: v -cg -shared ${{ matrix.optimization }} ${{ env.MOD_PATH }}
 
   test:
     needs: simple-build
@@ -98,38 +97,13 @@ jobs:
       - name: Run tests
         run: v test ${{ env.MOD_PATH }}
 
-  setup-clang:
-    needs: [lint, test]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check if LLVM and Clang is cached
-        id: check-llvm-cache
-        uses: actions/cache/restore@v3
-        with:
-          path: ${{ env.WORK_PATH }}llvm
-          key: llvm-15
-
-      - if: ${{ steps.check-llvm-cache.outputs.cache-hit != 'true' }}
-        name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v1
-        with:
-          version: '15'
-
-      - if: ${{ steps.check-llvm-cache.outputs.cache-hit != 'true' }}
-        name: Cache LLVM and Clang
-        uses: actions/cache/save@v3
-        with:
-          path: ${{ env.WORK_PATH }}llvm
-          key: llvm-15
-
   different-compilers:
-    needs: setup-clang
+    needs: test
     runs-on: ubuntu-latest
     strategy:
       matrix:
         compiler: [gcc, clang]
-        trimming: [null, -skip-unused]
-        optimization: [null, -prod]
+        optimization: ['', -prod]
     steps:
       - name: Restore V Cache
         uses: actions/cache/restore@v3
@@ -141,27 +115,6 @@ jobs:
       - name: Setup V
         uses: vlang/setup-v@v1.3
 
-      - if: ${{ matrix.compiler == 'gcc' }}
-        name: Setup GCC
-        run: |
-          sudo apt-get update
-          sudo apt-get install --quiet -y build-essential
-
-      - if: ${{ matrix.compiler == 'clang' }}
-        name: Restore LLVM and Clang Cache
-        uses: actions/cache/restore@v3
-        with:
-          path: ${{ env.WORK_PATH }}llvm
-          key: llvm-15
-          fail-on-cache-miss: true
-
-      - if: ${{ matrix.compiler == 'clang' }}
-        name: Setup LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v1
-        with:
-          version: '15'
-          cached: true
-
       - name: Setup libcurl
         run: sudo apt install libcurl4-openssl-dev
 
@@ -171,15 +124,8 @@ jobs:
       - name: Copy ${{ github.event.repository.name }} to .vmodules
         run: cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
 
-      - if: ${{ matrix.compiler == 'clang' }}
-        name: ${{ matrix.compiler }} ${{ matrix.trimming }} build
-        run: |
-          cp -r ${{ env.WORK_PATH }} ${{ env.MOD_PATH }}
-          v -cg -shared -cc ${{ matrix.compiler }} ${{ matrix.trimming }} ${{ env.MOD_PATH }}
-
-      - if: ${{ matrix.compiler == 'gcc' }}
-        name: ${{ matrix.compiler }} ${{ matrix.trimming }} ${{ matrix.optimization }} build
-        run: v -cg -shared -cc ${{ matrix.compiler }} ${{ matrix.trimming }} ${{ matrix.optimization }} ${{ env.MOD_PATH }}
+      - name: ${{ matrix.compiler }} ${{ matrix.optimization }} build
+        run: v -cg -shared -cc ${{ matrix.compiler }} ${{ matrix.optimization }} ${{ env.MOD_PATH }}
 
   gcc-sanitizers:
     needs: different-compilers
@@ -197,11 +143,6 @@ jobs:
 
       - name: Setup V
         uses: vlang/setup-v@v1.3
-
-      - name: Setup GCC
-        run: |
-          sudo apt-get update
-          sudo apt-get install --quiet -y build-essential
 
       - name: Setup libcurl
         run: sudo apt install libcurl4-openssl-dev
