@@ -16,10 +16,14 @@ fn (req Request) download_file_(url string, file_path string) !Response {
 	defer {
 		file.close()
 	}
-	mut w := FileWriter{
+	mut fw := FileWriter{
 		file: file
 	}
-	set_download_opts(h, w)
+	curl.easy_setopt(h, .header, 0)
+	curl.easy_setopt(h, .headerfunction, write_null)
+	curl.easy_setopt(h, .httpget, 1)
+	curl.easy_setopt(h, .writefunction, write_download)
+	curl.easy_setopt(h, .writedata, &fw)
 	send_request(h)!
 
 	mut status_code := 0
@@ -46,12 +50,16 @@ fn (req Request) download_file_with_progress_(url string, file_path string, mut 
 
 	mut length := u64(0)
 	curl.easy_getinfo(h, .content_length_download_t, &length)
-	mut w := ProgressWriter{
+	mut fw := ProgressWriter{
 		file: file
 		size: length
 		download: dl
 	}
-	set_download_opts(h, w)
+	curl.easy_setopt(h, .header, 0)
+	curl.easy_setopt(h, .headerfunction, write_null)
+	curl.easy_setopt(h, .httpget, 1)
+	curl.easy_setopt(h, .writefunction, write_download_with_progress)
+	curl.easy_setopt(h, .writedata, &fw)
 	send_request(h)!
 	dl.finish()
 
@@ -61,15 +69,4 @@ fn (req Request) download_file_with_progress_(url string, file_path string, mut 
 	resp.get_http_version()!
 
 	return resp
-}
-
-fn set_download_opts(h &C.CURL, w DownloadWriter) {
-	curl.easy_setopt(h, .header, 0)
-	curl.easy_setopt(h, .headerfunction, write_null)
-	curl.easy_setopt(h, .httpget, 1)
-	curl.easy_setopt(h, .writedata, &w)
-	match w {
-		FileWriter { curl.easy_setopt(h, .writefunction, write_download) }
-		ProgressWriter { curl.easy_setopt(h, .writefunction, write_download_with_progress) }
-	}
 }
