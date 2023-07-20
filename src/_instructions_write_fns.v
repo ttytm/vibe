@@ -36,10 +36,9 @@ fn write_resp_slice(data &char, size usize, nmemb usize, mut resp Response) usiz
 fn write_download(data &char, size usize, nmemb usize, mut fw FileWriter) usize {
 	n := size * nmemb
 	if fw.file.is_opened {
-		unsafe {
+		fw.pos += u64(unsafe {
 			fw.file.write_ptr_at(data, int(n), fw.pos)
-		}
-		fw.pos += u64(n)
+		})
 	}
 	return n
 }
@@ -47,10 +46,9 @@ fn write_download(data &char, size usize, nmemb usize, mut fw FileWriter) usize 
 fn write_download_with_progress(data &char, size u64, nmemb u64, mut w ProgressWriter) u64 {
 	n := size * nmemb
 	if w.file.is_opened {
-		unsafe {
+		w.pos += u64(unsafe {
 			w.file.write_ptr_at(data, int(n), w.pos)
-		}
-		w.pos += n
+		})
 		w.download.progress(w.pos, w.size)
 	}
 	return n
