@@ -8,7 +8,6 @@ fn try_request(request Request, attempt int, max_attempts int) !Response {
 		resp
 	} else {
 		if attempt < max_attempts {
-			dump('retry')
 			return try_request(request, attempt + 1, max_attempts)
 		}
 		err
