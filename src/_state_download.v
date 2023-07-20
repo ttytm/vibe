@@ -20,3 +20,5 @@ mut:
 	progress(u64, u64)
 	finish()
 }
+
+type DownloadWriter = FileWriter | ProgressWriter
