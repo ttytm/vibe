@@ -27,6 +27,7 @@ fn (req Request) set_common_opts(h &C.CURL, url string, resp &Response) {
 		curl.easy_setopt(h, .timeout_ms, req.timeout.milliseconds())
 	}
 	curl.easy_setopt(h, .url, url)
+	curl.easy_setopt(h, .header, 1)
 	curl.easy_setopt(h, .headerdata, resp)
 	curl.easy_setopt(h, .headerfunction, write_resp_header)
 }

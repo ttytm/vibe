@@ -24,8 +24,8 @@ fn (req Request) head_(url string) !Response {
 // Abstracted to also allow internal usage. E.g. before downloading to retrieve the head before an actual request.
 fn (req Request) head__(h &C.CURL, url string) !Response {
 	mut resp := Response{}
+	curl.easy_setopt(h, .writefunction, write_null)
 	curl.easy_setopt(h, .nobody, 1)
-	curl.easy_setopt(h, .header, 0)
 	req.set_common_opts(h, url, &resp)
 	send_request(h)!
 
