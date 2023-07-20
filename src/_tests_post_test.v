@@ -3,6 +3,18 @@ module vibe
 import time
 import x.json2 as json
 
+fn try_request(request Request, attempt int, max_attempts int) !Response {
+	return if resp := request.post('https://httpbin.org/post', '{"msg":"hello from vibe"}') {
+		resp
+	} else {
+		if attempt < max_attempts {
+			dump('retry')
+			return try_request(request, attempt + 1, max_attempts)
+		}
+		err
+	}
+}
+
 fn test_post() {
 	req := Request{
 		headers: {
@@ -14,11 +26,8 @@ fn test_post() {
 		}
 		timeout: time.second * 10
 	}
-	mut resp := req.post('https://httpbin.org/post', '{"msg":"hello from vibe"}')!
-	// Allow one retry as we rely here on httpbin as a third party and may encounter slow/no response times
-	if resp.status != 200 {
-		resp = req.post('https://httpbin.org/post', '{"msg":"hello from vibe"}')!
-	}
+	// Allow for retries as we rely here on httpbin as a third party and may encounter slow/no response times
+	resp := try_request(req, 0, 10)!
 
 	assert resp.status == 200
 	raw_json_resp := json.raw_decode(resp.body)!.as_map()
