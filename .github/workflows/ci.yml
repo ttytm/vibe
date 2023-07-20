@@ -59,7 +59,7 @@ jobs:
         uses: vlang/setup-v@v1.3
 
       - name: Setup libcurl
-        run: sudo apt install libcurl4-openssl-dev
+        run: sudo apt update && sudo apt install libcurl4-openssl-dev
 
       - name: Checkout ${{ github.event.repository.name }}
         uses: actions/checkout@v3
@@ -87,7 +87,7 @@ jobs:
         uses: vlang/setup-v@v1.3
 
       - name: Setup libcurl
-        run: sudo apt install libcurl4-openssl-dev
+        run: sudo apt update && sudo apt install libcurl4-openssl-dev
 
       - name: Checkout ${{ github.event.repository.name }}
         uses: actions/checkout@v3
@@ -119,7 +119,7 @@ jobs:
         uses: vlang/setup-v@v1.3
 
       - name: Setup libcurl
-        run: sudo apt install libcurl4-openssl-dev
+        run: sudo apt update && sudo apt install libcurl4-openssl-dev
 
       - name: Checkout ${{ github.event.repository.name }}
         uses: actions/checkout@v3
@@ -150,7 +150,7 @@ jobs:
         uses: vlang/setup-v@v1.3
 
       - name: Setup libcurl
-        run: sudo apt install libcurl4-openssl-dev
+        run: sudo apt update && sudo apt install libcurl4-openssl-dev
 
       - name: Checkout ${{ github.event.repository.name }}
         uses: actions/checkout@v3
