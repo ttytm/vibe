@@ -30,6 +30,24 @@ fn (req Request) set_common_opts(h &C.CURL, url string, resp &Response) {
 	curl.easy_setopt(h, .header, 1)
 	curl.easy_setopt(h, .headerdata, resp)
 	curl.easy_setopt(h, .headerfunction, write_resp_header)
+	req.set_proxy(h)
+}
+
+fn (req Request) set_proxy(h &C.CURL) {
+	if req.proxy.address == '' {
+		return
+	}
+	curl.easy_setopt(h, .proxy, req.proxy.address.str)
+	if req.proxy.port != 0 {
+		curl.easy_setopt(h, .proxyport, req.proxy.port)
+	}
+	if req.proxy.user != '' {
+		mut userpwd := req.proxy.user
+		if req.proxy.password != '' {
+			userpwd += ':' + req.proxy.password
+		}
+		curl.easy_setopt(h, .proxyuserpwd, userpwd.replace(' ', '').str)
+	}
 }
 
 fn send_request(handle &C.CURL) ! {

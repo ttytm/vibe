@@ -9,8 +9,17 @@ pub mut:
 	custom_headers map[string]string
 	cookie_jar     string
 	cookie_file    string
+	proxy          ProxySettings
 	timeout        time.Duration
 	max_redirects  u16 = 10
+}
+
+pub struct ProxySettings {
+pub mut:
+	address  string
+	port     u16
+	user     string
+	password string
 }
 
 // TODO:
