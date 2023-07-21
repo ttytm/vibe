@@ -54,8 +54,7 @@ fn (req Request) get_slice_(url string, start usize, max_size_ ?usize) !Response
 	curl.easy_getinfo(h, .response_code, &status_code)
 	if status_code / 100 == 3 {
 		resp.handle_redirect(h, req.max_redirects)!
-	} else {
-		resp.status = Status(status_code)
+		curl.easy_getinfo(h, .response_code, &status_code)
 	}
 
 	if resp.body.len == 0 {
@@ -64,7 +63,7 @@ fn (req Request) get_slice_(url string, start usize, max_size_ ?usize) !Response
 	}
 
 	resp.get_http_version()!
-	// resp.status = Status(status_code)
+	resp.status = Status(status_code)
 	if start < resp.header.len {
 		resp.body = resp.body[resp.header.len - int(start)..]
 	}
