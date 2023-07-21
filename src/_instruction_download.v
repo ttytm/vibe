@@ -11,7 +11,7 @@ fn (req Request) download_file_(url string, file_path string) !Response {
 		curl.slist_free_all(header)
 	}
 
-	mut resp := req.head__(h, url)!
+	mut resp := req.follow_download_head(h, url)!
 	mut file := os.create(file_path)!
 	defer {
 		file.close()
@@ -19,9 +19,7 @@ fn (req Request) download_file_(url string, file_path string) !Response {
 	mut fw := FileWriter{
 		file: file
 	}
-	curl.easy_setopt(h, .header, 0)
-	curl.easy_setopt(h, .headerfunction, write_null)
-	curl.easy_setopt(h, .httpget, 1)
+	req.set_download_opts(h)
 	curl.easy_setopt(h, .writefunction, write_download)
 	curl.easy_setopt(h, .writedata, &fw)
 	send_request(h)!
@@ -31,7 +29,7 @@ fn (req Request) download_file_(url string, file_path string) !Response {
 	resp.status = Status(status_code)
 	resp.get_http_version()!
 
-	return resp
+	return resp.Response
 }
 
 fn (req Request) download_file_with_progress_(url string, file_path string, mut dl Download) !Response {
@@ -42,7 +40,7 @@ fn (req Request) download_file_with_progress_(url string, file_path string, mut 
 		curl.slist_free_all(header)
 	}
 
-	mut resp := req.head__(h, url)!
+	mut resp := req.follow_download_head(h, url)!
 	mut file := os.create(file_path)!
 	defer {
 		file.close()
@@ -55,9 +53,7 @@ fn (req Request) download_file_with_progress_(url string, file_path string, mut 
 		size: length
 		download: dl
 	}
-	curl.easy_setopt(h, .header, 0)
-	curl.easy_setopt(h, .headerfunction, write_null)
-	curl.easy_setopt(h, .httpget, 1)
+	req.set_download_opts(h)
 	curl.easy_setopt(h, .writefunction, write_download_with_progress)
 	curl.easy_setopt(h, .writedata, &fw)
 	send_request(h)!
@@ -67,6 +63,28 @@ fn (req Request) download_file_with_progress_(url string, file_path string, mut 
 	curl.easy_getinfo(h, .response_code, &status_code)
 	resp.status = Status(status_code)
 	resp.get_http_version()!
+
+	return resp.Response
+}
+
+fn (req Request) set_download_opts(h &C.CURL) {
+	curl.easy_setopt(h, .header, 0)
+	curl.easy_setopt(h, .headerfunction, write_null)
+	curl.easy_setopt(h, .httpget, 1)
+}
+
+// Follows redirects, sets the handle's URL opt to the latest URL of the redirected destination and sets header data.
+// Used to retrieve the head before sending the actual download request.
+fn (req Request) follow_download_head(h &C.CURL, url string) !VibeResponse {
+	mut resp := VibeResponse{}
+	req.set_head_opts(h, url, &resp)
+	send_request(h)!
+
+	mut status_code := 0
+	curl.easy_getinfo(h, .response_code, &status_code)
+	if status_code / 100 == 3 {
+		resp.handle_redirect(h, req.max_redirects)!
+	}
 
 	return resp
 }

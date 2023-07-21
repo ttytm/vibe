@@ -1,6 +1,15 @@
 module vibe
 
 pub struct Response {
+pub mut:
+	header       string
+	status       Status
+	http_version string
+	body         string
+}
+
+struct VibeResponse {
+	Response
 mut:
 	pos   usize
 	slice struct {
@@ -9,9 +18,4 @@ mut:
 	mut:
 		finished bool
 	}
-pub mut:
-	header       string
-	status       Status
-	http_version string
-	body         string
 }
