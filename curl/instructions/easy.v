@@ -2,9 +2,6 @@ module instructions
 
 import vibe.curl.state
 
-#flag -lcurl
-#include <curl/curl.h>
-
 fn C.curl_easy_init() &C.CURL
 
 fn C.curl_easy_cleanup(&C.CURL)

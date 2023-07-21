@@ -8,6 +8,9 @@ module curl
 import vibe.curl.instructions
 import vibe.curl.state
 
+#flag -lcurl
+#include <curl/curl.h>
+
 pub type Opt = state.Opt
 
 pub type Ecode = state.Ecode
