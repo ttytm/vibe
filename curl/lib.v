@@ -1,3 +1,8 @@
+/*
+Source: https://github.com/tobealive/vibe
+License: MIT
+*/
+
 module curl
 
 import vibe.curl.instructions
