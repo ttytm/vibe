@@ -10,7 +10,7 @@ fn (req Request) post_(url string, data string) !Response {
 		curl.slist_free_all(header)
 	}
 
-	mut resp := Response{}
+	mut resp := VibeResponse{}
 	curl.easy_setopt(h, .post, 1)
 	curl.easy_setopt(h, .postfields, data)
 	curl.easy_setopt(h, .header, 1)
@@ -30,5 +30,5 @@ fn (req Request) post_(url string, data string) !Response {
 	resp.status = Status(status_code)
 	resp.body = resp.body[resp.header.len..]
 
-	return resp
+	return resp.Response
 }

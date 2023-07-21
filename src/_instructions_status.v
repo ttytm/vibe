@@ -2,7 +2,7 @@ module vibe
 
 import strconv
 
-fn (mut resp Response) get_http_version() ! {
+fn (mut resp VibeResponse) get_http_version() ! {
 	status_line := resp.header.before('\r\n')
 
 	// Example: [0]: http/1.1 [1]: 200 [2]: OK

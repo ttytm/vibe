@@ -11,8 +11,9 @@ fn (req Request) get_(url string) !Response {
 		curl.slist_free_all(header)
 	}
 
-	mut resp := Response{}
+	mut resp := VibeResponse{}
 	req.set_get_opts(h, url, &resp)
+	curl.easy_setopt(h, .writefunction, write_resp)
 	send_request(h)!
 
 	mut status_code := 0
@@ -26,7 +27,7 @@ fn (req Request) get_(url string) !Response {
 	resp.status = Status(status_code)
 	resp.body = resp.body[resp.header.len..]
 
-	return resp
+	return resp.Response
 }
 
 fn (req Request) get_slice_(url string, start usize, max_size_ ?usize) !Response {
@@ -38,13 +39,14 @@ fn (req Request) get_slice_(url string, start usize, max_size_ ?usize) !Response
 	}
 
 	max_size := max_size_ or { 0 }
-	mut resp := Response{
+	mut resp := VibeResponse{
 		slice: struct {
 			start: start
 			end: start + max_size
 		}
 	}
 	req.set_get_opts(h, url, &resp)
+	curl.easy_setopt(h, .writefunction, write_resp_slice)
 	res := curl.easy_perform(h)
 	if res != curl.Ecode.ok && !resp.slice.finished {
 		return curl.curl_error(res)
@@ -67,21 +69,16 @@ fn (req Request) get_slice_(url string, start usize, max_size_ ?usize) !Response
 	if start < resp.header.len {
 		resp.body = resp.body[resp.header.len - int(start)..]
 	}
+	// If the last chunk was bigger than max_size, truncate it
 	if resp.body.len > max_size {
 		resp.body = resp.body[..max_size]
 	}
 
-	return resp
+	return resp.Response
 }
 
-fn (req Request) set_get_opts(h &C.CURL, url string, resp &Response) {
-	if resp.slice.start > 0 {
-		curl.easy_setopt(h, .writefunction, write_resp_slice)
-	} else {
-		curl.easy_setopt(h, .writefunction, write_resp)
-	}
+fn (req Request) set_get_opts(h &C.CURL, url string, resp &VibeResponse) {
 	curl.easy_setopt(h, .httpget, 1)
-	curl.easy_setopt(h, .header, 1)
 	curl.easy_setopt(h, .writedata, resp)
 	req.set_common_opts(h, url, resp)
 }
