@@ -2,7 +2,7 @@ Module {
 	name: 'vibe'
 	description: 'Vibe is a request library that wraps libcurl to enable fast and
 reliable requests while providing a higher-level API.'
-	version: '0.3.0'
+	version: '0.4.0'
 	license: 'MIT'
 	dependencies: []
 }
