@@ -16,7 +16,7 @@ fn cleanup_() {
 	curl.global_cleanup()
 }
 
-fn (req Request) set_common_opts(h &C.CURL, url string, resp &VibeResponse) {
+fn (req Request) set_common_opts(h &curl.Handle, url string, resp &VibeResponse) {
 	if req.cookie_jar != '' {
 		curl.easy_setopt(h, .cookiejar, req.cookie_jar)
 	}
@@ -33,7 +33,7 @@ fn (req Request) set_common_opts(h &C.CURL, url string, resp &VibeResponse) {
 	req.set_proxy(h)
 }
 
-fn (req Request) set_proxy(h &C.CURL) {
+fn (req Request) set_proxy(h &curl.Handle) {
 	if req.proxy.address == '' {
 		return
 	}
@@ -50,14 +50,14 @@ fn (req Request) set_proxy(h &C.CURL) {
 	}
 }
 
-fn send_request(handle &C.CURL) ! {
+fn send_request(handle &curl.Handle) ! {
 	res := curl.easy_perform(handle)
 	if res != curl.Ecode.ok {
 		return curl.curl_error(res)
 	}
 }
 
-fn (mut resp VibeResponse) handle_redirect(h &C.CURL, max_redirects u16) ! {
+fn (mut resp VibeResponse) handle_redirect(h &curl.Handle, max_redirects u16) ! {
 	mut status_code := 0
 	mut redir_url := ''.str
 

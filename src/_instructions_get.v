@@ -77,7 +77,7 @@ fn (req Request) get_slice_(url string, start usize, max_size_ ?usize) !Response
 	return resp.Response
 }
 
-fn (req Request) set_get_opts(h &C.CURL, url string, resp &VibeResponse) {
+fn (req Request) set_get_opts(h &curl.Handle, url string, resp &VibeResponse) {
 	curl.easy_setopt(h, .httpget, 1)
 	curl.easy_setopt(h, .writedata, resp)
 	req.set_common_opts(h, url, resp)

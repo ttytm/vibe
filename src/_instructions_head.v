@@ -26,7 +26,7 @@ fn (req Request) head_(url string) !Response {
 	return resp.Response
 }
 
-fn (req Request) set_head_opts(h &C.CURL, url string, resp &VibeResponse) {
+fn (req Request) set_head_opts(h &curl.Handle, url string, resp &VibeResponse) {
 	curl.easy_setopt(h, .writefunction, write_null)
 	curl.easy_setopt(h, .nobody, 1)
 	req.set_common_opts(h, url, resp)

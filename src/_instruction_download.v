@@ -67,7 +67,7 @@ fn (req Request) download_file_with_progress_(url string, file_path string, mut 
 	return resp.Response
 }
 
-fn (req Request) set_download_opts(h &C.CURL) {
+fn (req Request) set_download_opts(h &curl.Handle) {
 	curl.easy_setopt(h, .header, 0)
 	curl.easy_setopt(h, .headerfunction, write_null)
 	curl.easy_setopt(h, .httpget, 1)
@@ -75,7 +75,7 @@ fn (req Request) set_download_opts(h &C.CURL) {
 
 // Follows redirects, sets the handle's URL opt to the latest URL of the redirected destination and sets header data.
 // Used to retrieve the head before sending the actual download request.
-fn (req Request) follow_download_head(h &C.CURL, url string) !VibeResponse {
+fn (req Request) follow_download_head(h &curl.Handle, url string) !VibeResponse {
 	mut resp := VibeResponse{}
 	req.set_head_opts(h, url, &resp)
 	send_request(h)!

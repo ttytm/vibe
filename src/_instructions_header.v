@@ -2,8 +2,8 @@ module vibe
 
 import vibe.curl
 
-fn set_header(handle &C.CURL, headers HttpHeaders) &HeaderList {
-	mut list := &HeaderList(unsafe { nil })
+fn set_header(handle &curl.Handle, headers HttpHeaders) &curl.LinkedList {
+	mut list := &curl.LinkedList(unsafe { nil })
 
 	// Set default header and return if no headers were specified
 	if headers.common.len == 0 && headers.custom.len == 0 {

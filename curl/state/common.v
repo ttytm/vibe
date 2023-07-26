@@ -1,5 +1,9 @@
 module state
 
+pub struct C.CURL {}
+
+pub struct C.curl_slist {}
+
 pub enum GlobalInitFlag {
 	all = C.CURL_GLOBAL_ALL
 	ssl = C.CURL_GLOBAL_SSL

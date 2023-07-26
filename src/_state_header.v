@@ -1,7 +1,5 @@
 module vibe
 
-type HeaderList = C.curl_slist
-
 type Status = int
 
 [params]
