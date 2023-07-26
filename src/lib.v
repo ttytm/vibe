@@ -1,5 +1,5 @@
 /*
-Source: https://github.com/tobealive/vibe
+Source: https://github.com/ttytm/vibe
 License: MIT
 */
 

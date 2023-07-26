@@ -1,4 +1,4 @@
-<h1 align="center"><a href="https://github.com/tobealive/vibe"><img src ="https://github.com/tobealive/ui/assets/34311583/15dcf057-8284-4f5d-8622-0d8d878fa4bb" alt="vibe logo" width="125"></a></h1>
+<h1 align="center"><a href="https://github.com/ttytm/vibe"><img src ="https://github.com/ttytm/ui/assets/34311583/15dcf057-8284-4f5d-8622-0d8d878fa4bb" alt="vibe logo" width="125"></a></h1>
 
 Vibe is a request library that wraps libcurl to enable fast and reliable requests while providing a
 higher-level API.
@@ -10,21 +10,11 @@ Install via `v` cli
 - From source
 
   ```
-  v install --git https://github.com/tobealive/vibe
+  v install --git https://github.com/ttytm/vibe
   ```
 
   ```v
   import vibe
-  ```
-
-- As vpm module
-
-  ```
-  v install tobealive.vibe
-  ```
-
-  ```v
-  import tobealive.vibe
   ```
 
 ## Usage examples
