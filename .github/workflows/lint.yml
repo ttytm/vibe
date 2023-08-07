@@ -14,44 +14,28 @@ jobs:
       - name: Restore Cache
         uses: actions/cache/restore@v3
         with:
-          path: vlang
-          key: ${{ runner.os }}-v-
+          path: |
+            vlang
+            ~/.vmodules
+          key: ${{ runner.os }}-${{ github.sha }}
           fail-on-cache-miss: true
-
       - name: Setup V
         uses: vlang/setup-v@v1.3
-
-      - name: Checkout ${{ env.REPO_NAME }}
-        uses: actions/checkout@v3
-        with:
-          path: ${{ env.REPO_NAME }}
-
-      - name: Copy ${{ env.REPO_NAME }} to .vmodules
-        run: cp -r ${{ env.REPO_NAME }} ${{ env.MOD_PATH }}
-
       - name: Check Formatting
         run: v fmt -verify ${{ env.MOD_PATH }}
 
   vet:
     runs-on: ubuntu-latest
     steps:
-      - name: Restore V Cache
+      - name: Restore Cache
         uses: actions/cache/restore@v3
         with:
-          path: vlang
-          key: ${{ runner.os }}-v-
+          path: |
+            vlang
+            ~/.vmodules
+          key: ${{ runner.os }}-${{ github.sha }}
           fail-on-cache-miss: true
-
       - name: Setup V
         uses: vlang/setup-v@v1.3
-
-      - name: Checkout ${{ env.REPO_NAME }}
-        uses: actions/checkout@v3
-        with:
-          path: ${{ env.REPO_NAME }}
-
-      - name: Copy ${{ env.REPO_NAME }} to .vmodules
-        run: cp -r ${{ env.REPO_NAME }} ${{ env.MOD_PATH }}
-
       - name: Vet ${{ env.REPO_NAME }}
         run: v vet -W ${{ env.MOD_PATH }}/src/

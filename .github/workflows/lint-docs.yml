@@ -14,24 +14,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Restore Cache
+        id: cache-status
         uses: actions/cache/restore@v3
         with:
-          path: vlang
-          key: ${{ runner.os }}-v-
-
+          path: |
+            vlang
+            ~/.vmodules
+          key: ${{ runner.os }}-${{ github.sha }}
       - name: Setup V
         uses: vlang/setup-v@v1.3
-
-      - name: Setup libcurl
-        run: sudo apt update && sudo apt install libcurl4-openssl-dev
-
+      - name: Setup Dependencies
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: libcurl4-openssl-dev
+          version: 1.0
       - name: Checkout ${{ env.REPO_NAME }}
+        if: ${{ steps.cache-status.outputs.cache-hit != 'true' }}
         uses: actions/checkout@v3
         with:
           path: ${{ env.REPO_NAME }}
-
       - name: Copy ${{ env.REPO_NAME }} to .vmodules
+        if: ${{ steps.cache-status.outputs.cache-hit != 'true' }}
         run: cp -r ${{ env.REPO_NAME }} ${{ env.MOD_PATH }}
-
       - name: Check Markdown
         run: v check-md -hide-warnings ${{ env.MOD_PATH }}
