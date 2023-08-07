@@ -1,6 +1,6 @@
 name: 🚀 Feature Request
 description: Suggest an idea for this project
-labels: enhancement
+labels: [enhancement]
 body:
   - type: textarea
     id: description
@@ -45,14 +45,6 @@ body:
 
         - label: This feature might incur a breaking change
           required: false
-
-  - type: input
-    id: version
-    attributes:
-      label: Version used
-      description: Please provide the version of the repository or tool you are using.
-    validations:
-      required: true
 
   - type: textarea
     id: environment

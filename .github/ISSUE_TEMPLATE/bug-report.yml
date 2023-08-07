@@ -1,6 +1,6 @@
 name: 🐛 Bug Report
 description: Report a bug
-labels: bug
+labels: [bug]
 body:
   - type: textarea
     id: description
@@ -61,16 +61,6 @@ body:
         Providing context helps us come up with a solution that is most useful in the real world.
     validations:
       required: false
-
-  - type: input
-    id: version
-    attributes:
-      label: V version
-      description: |
-        Please make sure to run `v up` before reporting any issues as it may have already been fixed.
-        It's also advisable to update all relevant modules using `v outdated` and `v install`.
-    validations:
-      required: true
 
   - type: textarea
     id: environment
