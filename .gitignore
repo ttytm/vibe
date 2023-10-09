@@ -1,24 +1,28 @@
-# Binaries for programs and plugins
-main
-curlv
+# Binaries by extension
 *.exe
 *.exe~
+*.a
 *.so
-*.dylib
+*.o
+*.obj
 *.dll
+*.so
+*.so.*
+*.dylib
 
-# Ignore binary output folders
-bin/
+# All sub-level build binaries
+*/**/*
+!*/**/*/
+!*/**/*.*
 
-# Ignore common editor/system specific metadata
+# Common editor/system specific metadata
 .DS_Store
 .idea/
 .vscode/
 *.iml
 
-# ENV
+# Private files
 .env
 
-# vweb and database
-*.db
-*.js
+# Generated docs
+docs/site/
