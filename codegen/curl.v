@@ -21,7 +21,7 @@ fn gen_opts() string {
 		// [0]: CURLOPT_<NAME>, [1]: Description
 		tds := r.get_tags('td')
 		opt := tds[0].text()
-		opts += '\t${opt.replace('CURLOPT_', '').to_lower()} = C.${opt} // ${tds[1].text()}\n'
+		opts += '\t${opt.replace('CURLOPT_', '').to_lower()} = C.${opt} //${tds[1].text()}\n'
 	}
 	opts += '}'
 
@@ -97,7 +97,7 @@ fn gen_info() string {
 		// [0]: CURLOPT_<NAME>, [1]: Description
 		tds := r.get_tags('td')
 		opt := tds[0].text()
-		info += '\t${opt.replace('CURLINFO_', '').to_lower()} = C.${opt} // ${tds[1].text()}\n'
+		info += '\t${opt.replace('CURLINFO_', '').to_lower()} = C.${opt} //${tds[1].text()}\n'
 	}
 	info += '}'
 
