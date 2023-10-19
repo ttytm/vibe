@@ -5,16 +5,17 @@ higher-level API.
 
 ## Installation
 
-Install via `v` cli
+**Build Dependencies**
 
-- From source
+- libcurl - E.g., on Debian-based Linux distros, this might be `libcurl4-openssl-dev` or
+  `libcurl4-gnutls-dev`.
+
+**Vibe as V module**
+
+- Install via V's cli
 
   ```
   v install --git https://github.com/ttytm/vibe
-  ```
-
-  ```v
-  import vibe
   ```
 
 ## Usage examples
@@ -169,7 +170,7 @@ sensible community needs.
 
 - [x] Download with progress
 - [x] Custom headers
-- [x] curl Proxy support
+- [x] Proxy support
 - [ ] SSL options
 - [ ] Extend HTTP methods
 
@@ -177,7 +178,7 @@ sensible community needs.
 
 - Additional curl-compatible formats beyond HTTP.
 - Expose response streams / io.Reader implementation
-- Support different curl versions
+- Support multiple curl versions / allow to opt into newer versions.
 
 Given that the project is being worked on in spare time, please excuse potential delays in replying
 due to limited time resources.
