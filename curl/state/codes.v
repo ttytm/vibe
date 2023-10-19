@@ -2,6 +2,7 @@
 [generated]
 module state
 
+// TODO: check commented after debian 10 EOL, June 30, 2024. Compare Ubuntu LTS 22.04 with Debian 11.
 pub enum Ecode {
 	ok                       = C.CURLE_OK
 	unsupported_protocol     = C.CURLE_UNSUPPORTED_PROTOCOL
@@ -45,7 +46,7 @@ pub enum Ecode {
 	interface_failed         = C.CURLE_INTERFACE_FAILED
 	too_many_redirects       = C.CURLE_TOO_MANY_REDIRECTS
 	unknown_option           = C.CURLE_UNKNOWN_OPTION
-	setopt_option_syntax     = C.CURLE_SETOPT_OPTION_SYNTAX
+	// setopt_option_syntax     = C.CURLE_SETOPT_OPTION_SYNTAX // 7.78.0
 	got_nothing              = C.CURLE_GOT_NOTHING
 	ssl_engine_notfound      = C.CURLE_SSL_ENGINE_NOTFOUND
 	ssl_engine_setfailed     = C.CURLE_SSL_ENGINE_SETFAILED
@@ -84,31 +85,31 @@ pub enum Ecode {
 	ssl_invalidcertstatus    = C.CURLE_SSL_INVALIDCERTSTATUS
 	http2_stream             = C.CURLE_HTTP2_STREAM
 	recursive_api_call       = C.CURLE_RECURSIVE_API_CALL
-	auth_error               = C.CURLE_AUTH_ERROR
-	http3                    = C.CURLE_HTTP3
-	quic_connect_error       = C.CURLE_QUIC_CONNECT_ERROR
-	proxy                    = C.CURLE_PROXY
-	ssl_clientcert           = C.CURLE_SSL_CLIENTCERT
-	// unrecoverable_poll = C.CURLE_UNRECOVERABLE_POLL
-	// writefunc_error = C.CURL_WRITEFUNC_ERROR
+	// auth_error               = C.CURLE_AUTH_ERROR // 7.66.0
+	// http3                    = C.CURLE_HTTP3 // 7.68.0
+	// quic_connect_error       = C.CURLE_QUIC_CONNECT_ERROR // 7.69.0
+	// proxy                    = C.CURLE_PROXY // 7.73.0
+	// ssl_clientcert           = C.CURLE_SSL_CLIENTCERT // 7.77.0
+	// unrecoverable_poll       = C.CURLE_UNRECOVERABLE_POLL // 7.84.0
+	// writefunc_error          = C.CURL_WRITEFUNC_ERROR // 7.87.0
 }
 
 enum Mcode {
-	call_multi_perform    = C.CURLM_CALL_MULTI_PERFORM
-	call_multi_socket     = C.CURLM_CALL_MULTI_SOCKET
-	ok                    = C.CURLM_OK
-	bad_handle            = C.CURLM_BAD_HANDLE
-	bad_easy_handle       = C.CURLM_BAD_EASY_HANDLE
-	out_of_memory         = C.CURLM_OUT_OF_MEMORY
-	internal_error        = C.CURLM_INTERNAL_ERROR
-	bad_socket            = C.CURLM_BAD_SOCKET
-	unknown_option        = C.CURLM_UNKNOWN_OPTION
-	added_already         = C.CURLM_ADDED_ALREADY
-	recursive_api_call    = C.CURLM_RECURSIVE_API_CALL
-	wakeup_failure        = C.CURLM_WAKEUP_FAILURE
-	bad_function_argument = C.CURLM_BAD_FUNCTION_ARGUMENT
-	aborted_by_callback   = C.CURLM_ABORTED_BY_CALLBACK
-	// unrecoverable_poll = C.CURLM_UNRECOVERABLE_POLL
+	call_multi_perform = C.CURLM_CALL_MULTI_PERFORM
+	call_multi_socket  = C.CURLM_CALL_MULTI_SOCKET
+	ok                 = C.CURLM_OK
+	bad_handle         = C.CURLM_BAD_HANDLE
+	bad_easy_handle    = C.CURLM_BAD_EASY_HANDLE
+	out_of_memory      = C.CURLM_OUT_OF_MEMORY
+	internal_error     = C.CURLM_INTERNAL_ERROR
+	bad_socket         = C.CURLM_BAD_SOCKET
+	unknown_option     = C.CURLM_UNKNOWN_OPTION
+	added_already      = C.CURLM_ADDED_ALREADY
+	recursive_api_call = C.CURLM_RECURSIVE_API_CALL
+	// wakeup_failure        = C.CURLM_WAKEUP_FAILURE // 7.68.0
+	// bad_function_argument = C.CURLM_BAD_FUNCTION_ARGUMENT // 7.69.0
+	// aborted_by_callback   = C.CURLM_ABORTED_BY_CALLBACK // 7.81.0
+	// unrecoverable_poll    = C.CURLM_UNRECOVERABLE_POLL // 7.84.0
 }
 
 pub enum SHEcode {
@@ -138,27 +139,27 @@ enum UEcode {
 	no_port            = C.CURLUE_NO_PORT
 	no_query           = C.CURLUE_NO_QUERY
 	no_fragment        = C.CURLUE_NO_FRAGMENT
-	no_zoneid          = C.CURLUE_NO_ZONEID
-	bad_file_url       = C.CURLUE_BAD_FILE_URL
-	bad_fragment       = C.CURLUE_BAD_FRAGMENT
-	bad_hostname       = C.CURLUE_BAD_HOSTNAME
-	bad_ipv6           = C.CURLUE_BAD_IPV6
-	bad_login          = C.CURLUE_BAD_LOGIN
-	bad_password       = C.CURLUE_BAD_PASSWORD
-	bad_path           = C.CURLUE_BAD_PATH
-	bad_query          = C.CURLUE_BAD_QUERY
-	bad_scheme         = C.CURLUE_BAD_SCHEME
-	bad_slashes        = C.CURLUE_BAD_SLASHES
-	bad_user           = C.CURLUE_BAD_USER
+	// no_zoneid          = C.CURLUE_NO_ZONEID // 7.81.0
+	// bad_file_url       = C.CURLUE_BAD_FILE_URL // 7.81.0
+	// bad_fragment       = C.CURLUE_BAD_FRAGMENT // 7.81.0
+	// bad_hostname       = C.CURLUE_BAD_HOSTNAME // 7.81.0
+	// bad_ipv6           = C.CURLUE_BAD_IPV6 // 7.81.0
+	// bad_login          = C.CURLUE_BAD_LOGIN // 7.81.0
+	// bad_password       = C.CURLUE_BAD_PASSWORD // 7.81.0
+	// bad_path           = C.CURLUE_BAD_PATH // 7.81.0
+	// bad_query          = C.CURLUE_BAD_QUERY // 7.81.0
+	// bad_scheme         = C.CURLUE_BAD_SCHEME // 7.81.0
+	// bad_slashes        = C.CURLUE_BAD_SLASHES // 7.81.0
+	// bad_user           = C.CURLUE_BAD_USER // 7.81.0
 }
 
 /*
 enum Hcode {
-	curlhe_badindex = C.CURLHE_BADINDEX
-	curlhe_missing = C.CURLHE_MISSING
-	curlhe_noheaders = C.CURLHE_NOHEADERS
-	curlhe_norequest = C.CURLHE_NOREQUEST
-	curlhe_out_of_memory = C.CURLHE_OUT_OF_MEMORY
-	curlhe_bad_argument = C.CURLHE_BAD_ARGUMENT
-	curlhe_not_built_in = C.CURLHE_NOT_BUILT_IN
+	curlhe_badindex = C.CURLHE_BADINDEX // 7.83.0
+	curlhe_missing = C.CURLHE_MISSING // 7.83.0
+	curlhe_noheaders = C.CURLHE_NOHEADERS // 7.83.0
+	curlhe_norequest = C.CURLHE_NOREQUEST // 7.83.0
+	curlhe_out_of_memory = C.CURLHE_OUT_OF_MEMORY // 7.83.0
+	curlhe_bad_argument = C.CURLHE_BAD_ARGUMENT // 7.83.0
+	curlhe_not_built_in = C.CURLHE_NOT_BUILT_IN // 7.83.0
 }*/

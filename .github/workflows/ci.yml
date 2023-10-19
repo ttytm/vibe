@@ -12,7 +12,7 @@ env:
 
 jobs:
   setup:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Install V
         uses: vlang/setup-v@v1.3
@@ -43,7 +43,7 @@ jobs:
 
   test:
     needs: setup
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         optimization: ['', -cstrict]
@@ -68,7 +68,7 @@ jobs:
 
   different-compilers:
     needs: test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         compiler: [gcc, clang]
