@@ -177,6 +177,7 @@ sensible community needs.
 
 - Additional curl-compatible formats beyond HTTP.
 - Expose response streams / io.Reader implementation
+- Support different curl versions
 
 Given that the project is being worked on in spare time, please excuse potential delays in replying
 due to limited time resources.
