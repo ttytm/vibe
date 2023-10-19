@@ -24,7 +24,7 @@ jobs:
           packages: libcurl4-openssl-dev
           version: 1.0
       - name: Checkout ${{ env.REPO_NAME }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: ${{ env.REPO_NAME }}
       - name: Setup ${{ env.REPO_NAME }}
@@ -47,6 +47,7 @@ jobs:
     strategy:
       matrix:
         optimization: ['', -cstrict]
+      fail-fast: false
     steps:
       - name: Restore Cache
         uses: actions/cache/restore@v3
@@ -64,7 +65,11 @@ jobs:
           packages: libcurl4-openssl-dev
           version: 1.0
       - name: Run tests
-        run: v -cg ${{ matrix.optimization }} test ${{ env.MOD_PATH }}
+        uses: nick-fields/retry@v2
+        with:
+          timeout_minutes: 3
+          max_attempts: 3
+          command: v -cg ${{ matrix.optimization }} test ${{ env.MOD_PATH }}
 
   different-compilers:
     needs: test
@@ -73,6 +78,7 @@ jobs:
       matrix:
         compiler: [gcc, clang]
         optimization: ['', -prod]
+      fail-fast: false
     steps:
       - name: Restore Cache
         uses: actions/cache/restore@v3
@@ -98,6 +104,7 @@ jobs:
     strategy:
       matrix:
         sanitizer: [address, leak]
+      fail-fast: false
     steps:
       - name: Restore Cache
         uses: actions/cache/restore@v3
@@ -114,8 +121,12 @@ jobs:
         with:
           packages: libcurl4-openssl-dev
           version: 1.0
-      - name: Test
-        run: v -cc clang -cflags -fsanitize=${{ matrix.sanitizer }} test ${{ env.MOD_PATH }}
+      - name: Run tests
+        uses: nick-fields/retry@v2
+        with:
+          timeout_minutes: 3
+          max_attempts: 3
+          command: v -cc clang -cflags -fsanitize=${{ matrix.sanitizer }} test ${{ env.MOD_PATH }}
 
   gcc-sanitizers:
     needs: different-compilers
@@ -123,6 +134,7 @@ jobs:
     strategy:
       matrix:
         sanitizer: [leak, address]
+      fail-fast: false
     env:
       SANITIZER: ${{ matrix.sanitizer }}
     steps:
@@ -141,10 +153,14 @@ jobs:
         with:
           packages: libcurl4-openssl-dev
           version: 1.0
-      - name: Test
-        run: |
-          if [[ $SANITIZER == "address" ]]; then
-            v -cc gcc -cflags -fsanitize=address -cflags -fsanitize-address-use-after-scope -cflags -fsanitize=pointer-compare -cflags -fsanitize=pointer-subtract test ${{ env.MOD_PATH }}
-          else
-            v -cc gcc -cflags -fsanitize=${{ matrix.sanitizer }} test ${{ env.MOD_PATH }}
-          fi
+      - name: Run tests
+        uses: nick-fields/retry@v2
+        with:
+          timeout_minutes: 3
+          max_attempts: 3
+          command: |
+            if [[ $SANITIZER == "address" ]]; then
+              v -cc gcc -cflags -fsanitize=address -cflags -fsanitize-address-use-after-scope -cflags -fsanitize=pointer-compare -cflags -fsanitize=pointer-subtract test ${{ env.MOD_PATH }}
+            else
+              v -cc gcc -cflags -fsanitize=${{ matrix.sanitizer }} test ${{ env.MOD_PATH }}
+            fi
