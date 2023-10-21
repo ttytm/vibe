@@ -23,7 +23,7 @@ jobs:
       abort: ${{ steps.debounce.outputs.abort }}
     steps:
       - name: Debounce
-        if: github.event_name == 'push'
+        if: github.ref_name != 'main' && github.event_name == 'push'
         id: debounce
         run: |
           pr_branches=$(gh pr list --json headRefName --repo $GITHUB_REPOSITORY)
