@@ -43,7 +43,7 @@ jobs:
           path: |
             vlang
             ~/.vmodules
-          key: ${{ runner.os }}-${{ github.sha }}
+          key: ubuntu-latest${{ github.sha }}
       - name: Setup V
         uses: vlang/setup-v@v1.3
       - name: Setup Dependencies
