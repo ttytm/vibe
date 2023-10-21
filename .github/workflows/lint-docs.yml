@@ -10,8 +10,27 @@ env:
   MOD_PATH: ~/.vmodules/vibe/
 
 jobs:
+  debounce:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    outputs:
+      abort: ${{ steps.debounce.outputs.abort }}
+    steps:
+      - name: Debounce
+        if: github.event_name == 'push'
+        id: debounce
+        run: |
+          pr_branches=$(gh pr list --json headRefName --repo $GITHUB_REPOSITORY)
+          if [[ $(echo "$pr_branches" | jq -r --arg GITHUB_REF '.[].headRefName | select(. == $GITHUB_REF)') ]]; then
+            echo "This push is associated with a pull request. Skipping the job."
+            echo "abort=true" >> "$GITHUB_OUTPUT"
+          fi
+
   check-docs:
     runs-on: ubuntu-latest
+    needs: debounce
+    if: needs.debounce.outputs.abort != 'true'
     steps:
       - name: Restore Cache
         id: cache-status
