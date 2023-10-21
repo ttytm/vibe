@@ -1,4 +1,4 @@
-name: Lint Docs
+name: Docs
 
 on:
   push:
