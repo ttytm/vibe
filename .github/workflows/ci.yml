@@ -7,7 +7,7 @@ on:
     paths-ignore: ['**/*.md']
 
 concurrency:
-  group: ci-${{ github.sha }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:

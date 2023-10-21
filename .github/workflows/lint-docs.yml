@@ -5,6 +5,10 @@ on:
     paths: ['**/*.md', '**/*.yml']
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   REPO_NAME: ${{ github.event.repository.name }}
   MOD_PATH: ~/.vmodules/vibe/
