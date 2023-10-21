@@ -66,11 +66,11 @@ fn (req Request) get_slice_(url string, start usize, max_size_ ?usize) !Response
 
 	resp.get_http_version()!
 	resp.status = Status(status_code)
-	if start < resp.header.len {
+	if start < usize(resp.header.len) {
 		resp.body = resp.body[resp.header.len - int(start)..]
 	}
 	// If the last chunk was bigger than max_size, truncate it
-	if resp.body.len > max_size {
+	if max_size < usize(resp.body.len) {
 		resp.body = resp.body[..max_size]
 	}
 

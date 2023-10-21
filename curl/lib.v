@@ -48,15 +48,15 @@ pub fn easy_cleanup(handle &Handle) {
 }
 
 pub fn easy_setopt[T](handle &Handle, option Opt, parameter T) Ecode {
-	return C.curl_easy_setopt(handle, option, parameter)
+	return instructions.easy_setopt(handle, option, parameter)
 }
 
 pub fn easy_perform(handle &Handle) Ecode {
-	return C.curl_easy_perform(handle)
+	return instructions.easy_perform(handle)
 }
 
 pub fn easy_getinfo[T](handle &Handle, info Info, typ T) Ecode {
-	return C.curl_easy_getinfo(handle, info, typ)
+	return instructions.easy_getinfo(handle, info, typ)
 }
 
 pub fn easy_strerror(err_code Ecode) string {
@@ -64,7 +64,7 @@ pub fn easy_strerror(err_code Ecode) string {
 }
 
 pub fn slist_append(list &LinkedList, item string) &LinkedList {
-	return C.curl_slist_append(list, item.str)
+	return C.curl_slist_append(list, &char(item.str))
 }
 
 pub fn slist_free_all(list &LinkedList) {

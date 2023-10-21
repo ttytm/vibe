@@ -6,13 +6,36 @@ on:
   pull_request:
     paths-ignore: ['**/*.md']
 
+concurrency:
+  group: ci-${{ github.sha }}
+  cancel-in-progress: true
+
 env:
   REPO_NAME: ${{ github.event.repository.name }}
   MOD_PATH: ~/.vmodules/vibe
 
 jobs:
+  debounce:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    outputs:
+      abort: ${{ steps.debounce.outputs.abort }}
+    steps:
+      - name: Debounce
+        if: github.event_name == 'push'
+        id: debounce
+        run: |
+          pr_branches=$(gh pr list --json headRefName --repo $GITHUB_REPOSITORY)
+          if [[ $(echo "$pr_branches" | jq -r --arg GITHUB_REF '.[].headRefName | select(. == $GITHUB_REF)') ]]; then
+            echo "This push is associated with a pull request. Skipping the job."
+            echo "abort=true" >> "$GITHUB_OUTPUT"
+          fi
+
   setup:
     runs-on: ubuntu-20.04
+    needs: debounce
+    if: needs.debounce.outputs.abort != 'true'
     steps:
       - name: Install V
         uses: vlang/setup-v@v1.3
@@ -44,10 +67,6 @@ jobs:
   test:
     needs: setup
     runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        optimization: ['', -cstrict]
-      fail-fast: false
     steps:
       - name: Restore Cache
         uses: actions/cache/restore@v3
@@ -69,15 +88,15 @@ jobs:
         with:
           timeout_minutes: 3
           max_attempts: 3
-          command: v -cg ${{ matrix.optimization }} test ${{ env.MOD_PATH }}
+          command: v -cg test ${{ env.MOD_PATH }}
 
   different-compilers:
     needs: test
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        compiler: [gcc, clang]
-        optimization: ['', -prod]
+        cc: [gcc, clang]
+        optimization: ['', -prod, -cstrict]
       fail-fast: false
     steps:
       - name: Restore Cache
@@ -96,13 +115,22 @@ jobs:
           packages: libcurl4-openssl-dev
           version: 1.0
       - name: Build
-        run: v -cg -shared -cc ${{ matrix.compiler }} ${{ matrix.optimization }} ${{ env.MOD_PATH }}
+        run: v -cg -shared -cc ${{ matrix.cc }} ${{ matrix.optimization }} ${{ env.MOD_PATH }}
+      - name: Run tests
+        # TODO: investigate segfaults when running tests in copmiler + optimization combinations
+        if: matrix.cc != 'gcc' && matrix.optimization != '-prod'
+        uses: nick-fields/retry@v2
+        with:
+          timeout_minutes: 3
+          max_attempts: 3
+          command: v -cc ${{ matrix.cc }} ${{ matrix.optimization }} test ${{ env.MOD_PATH }}
 
-  clang-sanitizers:
+  test-sanitzed:
     needs: different-compilers
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        cc: [gcc, clang]
         sanitizer: [address, leak]
       fail-fast: false
     steps:
@@ -126,41 +154,11 @@ jobs:
         with:
           timeout_minutes: 3
           max_attempts: 3
-          command: v -cc clang -cflags -fsanitize=${{ matrix.sanitizer }} test ${{ env.MOD_PATH }}
-
-  gcc-sanitizers:
-    needs: different-compilers
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        sanitizer: [leak, address]
-      fail-fast: false
-    env:
-      SANITIZER: ${{ matrix.sanitizer }}
-    steps:
-      - name: Restore Cache
-        uses: actions/cache/restore@v3
-        with:
-          path: |
-            vlang
-            ~/.vmodules
-          key: ${{ runner.os }}-${{ github.sha }}
-          fail-on-cache-miss: true
-      - name: Setup V
-        uses: vlang/setup-v@v1.3
-      - name: Setup Dependencies
-        uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
-          packages: libcurl4-openssl-dev
-          version: 1.0
-      - name: Run tests
-        uses: nick-fields/retry@v2
-        with:
-          timeout_minutes: 3
-          max_attempts: 3
           command: |
-            if [[ $SANITIZER == "address" ]]; then
-              v -cc gcc -cflags -fsanitize=address -cflags -fsanitize-address-use-after-scope -cflags -fsanitize=pointer-compare -cflags -fsanitize=pointer-subtract test ${{ env.MOD_PATH }}
+            if [[ ${{ matrix.cc }} == "gcc" && ${{ matrix.sanitizer }} == "address" ]]; then
+              cmd="v -cc gcc -cflags -fsanitize=address -cflags -fsanitize-address-use-after-scope -cflags -fsanitize=pointer-compare -cflags -fsanitize=pointer-subtract test ${{ env.MOD_PATH }}"
             else
-              v -cc gcc -cflags -fsanitize=${{ matrix.sanitizer }} test ${{ env.MOD_PATH }}
+              cmd="v -cc ${{ matrix.cc }} -cflags -fsanitize=${{ matrix.sanitizer }} test ${{ env.MOD_PATH }}"
             fi
+            echo "$cmd"
+            eval "$cmd"
