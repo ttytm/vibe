@@ -15,6 +15,9 @@
 !*/**/*/
 !*/**/*.*
 
+# Curl library files
+curl/libcurl
+
 # Common editor/system specific metadata
 .DS_Store
 .idea/

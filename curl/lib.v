@@ -8,8 +8,9 @@ module curl
 import instructions
 import state
 
-#flag -lcurl
-#include <curl/curl.h>
+#flag -I@VMODROOT/curl/libcurl/include
+#flag @VMODROOT/curl/libcurl/lib/.libs/libcurl.so
+#include "curl/curl.h"
 
 pub type Handle = C.CURL
 
