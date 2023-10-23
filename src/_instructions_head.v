@@ -14,14 +14,13 @@ fn (req Request) head_(url string) !Response {
 	req.set_head_opts(h, url, &resp)
 	send_request(h)!
 
-	mut status_code := 0
-	curl.easy_getinfo(h, .response_code, &status_code)
-	if status_code / 100 == 3 {
+	curl.easy_getinfo(h, .response_code, &resp.status_code)
+	if resp.status_code / 100 == 3 {
 		resp.handle_redirect(h, req.max_redirects)!
-		curl.easy_getinfo(h, .response_code, &status_code)
+		curl.easy_getinfo(h, .response_code, &resp.status_code)
 	}
 	resp.get_http_version()!
-	resp.status = Status(status_code)
+	resp.status = Status(resp.status_code)
 
 	return resp.Response
 }

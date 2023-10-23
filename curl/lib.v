@@ -55,7 +55,7 @@ pub fn easy_perform(handle &Handle) Ecode {
 	return instructions.easy_perform(handle)
 }
 
-pub fn easy_getinfo[T](handle &Handle, info Info, typ T) Ecode {
+pub fn easy_getinfo(handle &Handle, info Info, typ voidptr) Ecode {
 	return instructions.easy_getinfo(handle, info, typ)
 }
 

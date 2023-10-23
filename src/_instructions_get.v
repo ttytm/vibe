@@ -16,15 +16,14 @@ fn (req Request) get_(url string) !Response {
 	curl.easy_setopt(h, .writefunction, write_resp)
 	send_request(h)!
 
-	mut status_code := 0
-	curl.easy_getinfo(h, .response_code, &status_code)
-	if status_code / 100 == 3 {
+	curl.easy_getinfo(h, .response_code, &resp.status_code)
+	if resp.status_code / 100 == 3 {
 		resp.handle_redirect(h, req.max_redirects)!
-		curl.easy_getinfo(h, .response_code, &status_code)
+		curl.easy_getinfo(h, .response_code, &resp.status_code)
 	}
 
 	resp.get_http_version()!
-	resp.status = Status(status_code)
+	resp.status = Status(resp.status_code)
 	resp.body = resp.body[resp.header.len..]
 
 	return resp.Response
@@ -52,11 +51,10 @@ fn (req Request) get_slice_(url string, start usize, max_size_ ?usize) !Response
 		return curl.curl_error(res)
 	}
 
-	mut status_code := 0
-	curl.easy_getinfo(h, .response_code, &status_code)
-	if status_code / 100 == 3 {
+	curl.easy_getinfo(h, .response_code, &resp.status_code)
+	if resp.status_code / 100 == 3 {
 		resp.handle_redirect(h, req.max_redirects)!
-		curl.easy_getinfo(h, .response_code, &status_code)
+		curl.easy_getinfo(h, .response_code, &resp.status_code)
 	}
 
 	if resp.body.len == 0 {
@@ -65,7 +63,7 @@ fn (req Request) get_slice_(url string, start usize, max_size_ ?usize) !Response
 	}
 
 	resp.get_http_version()!
-	resp.status = Status(status_code)
+	resp.status = Status(resp.status_code)
 	if start < usize(resp.header.len) {
 		resp.body = resp.body[resp.header.len - int(start)..]
 	}
