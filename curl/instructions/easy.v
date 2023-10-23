@@ -38,6 +38,6 @@ pub fn easy_perform(handle &C.CURL) state.Ecode {
 	return ecode(C.curl_easy_perform(handle))
 }
 
-pub fn easy_getinfo[T](handle &C.CURL, info state.Info, typ T) state.Ecode {
+pub fn easy_getinfo(handle &C.CURL, info state.Info, typ voidptr) state.Ecode {
 	return ecode(C.curl_easy_getinfo(handle, int(info), typ))
 }

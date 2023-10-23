@@ -24,9 +24,8 @@ fn (req Request) download_file_(url string, file_path string) !Response {
 	curl.easy_setopt(h, .writedata, &fw)
 	send_request(h)!
 
-	mut status_code := 0
-	curl.easy_getinfo(h, .response_code, &status_code)
-	resp.status = Status(status_code)
+	curl.easy_getinfo(h, .response_code, &resp.status_code)
+	resp.status = Status(resp.status_code)
 	resp.get_http_version()!
 
 	return resp.Response
@@ -59,9 +58,8 @@ fn (req Request) download_file_with_progress_(url string, file_path string, mut 
 	send_request(h)!
 	dl.finish()
 
-	mut status_code := 0
-	curl.easy_getinfo(h, .response_code, &status_code)
-	resp.status = Status(status_code)
+	curl.easy_getinfo(h, .response_code, &resp.status_code)
+	resp.status = Status(resp.status_code)
 	resp.get_http_version()!
 
 	return resp.Response
@@ -80,10 +78,10 @@ fn (req Request) follow_download_head(h &curl.Handle, url string) !VibeResponse 
 	req.set_head_opts(h, url, &resp)
 	send_request(h)!
 
-	mut status_code := 0
-	curl.easy_getinfo(h, .response_code, &status_code)
-	if status_code / 100 == 3 {
+	curl.easy_getinfo(h, .response_code, &resp.status_code)
+	if resp.status_code / 100 == 3 {
 		resp.handle_redirect(h, req.max_redirects)!
+		curl.easy_getinfo(h, .response_code, &resp.status_code)
 	}
 
 	return resp

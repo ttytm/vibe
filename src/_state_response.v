@@ -11,8 +11,9 @@ pub mut:
 struct VibeResponse {
 	Response
 mut:
-	pos   usize
-	slice struct {
+	pos         usize
+	status_code int
+	slice       struct {
 		start usize
 		end   usize
 	mut:

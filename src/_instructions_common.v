@@ -58,7 +58,6 @@ fn send_request(handle &curl.Handle) ! {
 }
 
 fn (mut resp VibeResponse) handle_redirect(h &curl.Handle, max_redirects u16) ! {
-	mut status_code := 0
 	mut redir_url := ''.str
 
 	for _ in 0 .. max_redirects {
@@ -66,8 +65,8 @@ fn (mut resp VibeResponse) handle_redirect(h &curl.Handle, max_redirects u16) ! 
 		curl.easy_getinfo(h, .redirect_url, &redir_url)
 		curl.easy_setopt(h, .url, redir_url)
 		send_request(h)!
-		curl.easy_getinfo(h, .response_code, &status_code)
-		if status_code / 100 != 3 {
+		curl.easy_getinfo(h, .response_code, &resp.status_code)
+		if resp.status_code / 100 != 3 {
 			return
 		}
 	}
