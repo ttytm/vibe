@@ -39,6 +39,8 @@ resp2 := request.get('https://hacker-news.firebaseio.com/v0/item/1.json')!
 println(resp2.body)
 ```
 
+[`get_test`](https://github.com/ttytm/vibe/blob/main/src/_tests_get_test.v)
+
 #### POST request
 
 ```v
@@ -57,6 +59,8 @@ resp := req.post('https://httpbin.org/post', '{"msg":"hello from vibe"}')!
 println(resp)
 ```
 
+[`post_test`](https://github.com/ttytm/vibe/blob/main/src/_tests_post_test.v)
+
 #### Download
 
 ```v
@@ -65,6 +69,8 @@ import vibe
 vibe.download_file('https://github.com/vlang/v/releases/download/weekly.2023.23/v_linux.zip',
 	'v_linux.zip')!
 ```
+
+[`download_file_test`](https://github.com/ttytm/vibe/blob/main/src/_tests_download_file_test.v)
 
 <details><summary><b>More examples</b></summary>
 
@@ -80,7 +86,7 @@ only need a portion of them, you can perform a `get_slice` request.
 // Allocation of the received response as a vstring is postponed until the `start` byte position is reached.
 // The content is returned as soon as the slice reaches its `max_size` (offset from `start`)
 // - `max_size` can be `none` to return the remainder from the start.
-pub fn (req Request) get_slice(url string, start usize, size ?usize) !Response
+pub fn (req Request) get_slice(url string, start usize, max_size ?usize) !Response
 ```
 
 ```v
@@ -92,6 +98,8 @@ resp := vibe.get_slice('https://docs.vosca.dev/advanced-concepts/v-and-c.html', 
 selector := html.parse(resp.body).get_tags_by_class_name('language-vmod')[0]
 println(selector.text())
 ```
+
+[`get_slice_test`](https://github.com/ttytm/vibe/blob/main/src/_tests_get_slice_test.v)
 
 #### Download with progress
 

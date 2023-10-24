@@ -23,16 +23,16 @@ pub fn (req Request) get(url string) !Response {
 // Allocation of the received response as a vstring is postponed until the `start` byte position is reached.
 // The content is returned as soon as the slice reaches its `max_size` (offset from `start`)
 // - `max_size` can be `none` to return the remainder from the start.
-pub fn get_slice(url string, start usize, size ?usize) !Response {
-	return Request{}.get_slice_(url, start, size)!
+pub fn get_slice(url string, start usize, max_size ?usize) !Response {
+	return Request{}.get_slice_(url, start, max_size)!
 }
 
 // get_slice sends a GET request to the specified `url` and returns a slice of the response content.
 // Allocation of the received response as a vstring is postponed until the `start` byte position is reached.
 // The content is returned as soon as the slice reaches its `max_size` (offset from `start`)
 // - `max_size` can be `none` to return the remainder from the start.
-pub fn (req Request) get_slice(url string, start usize, size ?usize) !Response {
-	return req.get_slice_(url, start, size)!
+pub fn (req Request) get_slice(url string, start usize, max_size ?usize) !Response {
+	return req.get_slice_(url, start, max_size)!
 }
 
 // head sends a HEAD request to the specified `url` and returns the response.

@@ -25,7 +25,8 @@ fn test_post() {
 		}
 		timeout: time.second * 10
 	}
-	// Allow for retries as we rely here on httpbin as a third party and may encounter slow/no response times
+	// Allow for retries as the current test relies on httpbin as a third party
+	// and may encounter slow/no response times.
 	resp := try_request(req, 0, 10)!
 
 	assert resp.status == 200
