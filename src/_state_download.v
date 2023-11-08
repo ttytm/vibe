@@ -15,7 +15,7 @@ mut:
 	download Download
 }
 
-interface Download {
+pub interface Download {
 mut:
 	progress(u64, u64)
 	finish()
