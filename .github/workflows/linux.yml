@@ -75,11 +75,7 @@ jobs:
       - name: Build
         run: v -shared ${{ env.MOD_PATH }}
       - name: Run tests
-        uses: nick-fields/retry@v2
-        with:
-          timeout_minutes: 3
-          max_attempts: 3
-          command: v ${{ env.VFLAGS }} test ${{ env.MOD_PATH }}
+        run: v ${{ env.VFLAGS }} test ${{ env.MOD_PATH }}
 
   test-sanitzed:
     needs: test
@@ -108,15 +104,11 @@ jobs:
           packages: libcurl4-openssl-dev
           version: 1.0
       - name: Run tests
-        uses: nick-fields/retry@v2
-        with:
-          timeout_minutes: 3
-          max_attempts: 3
-          command: |
-            if [[ ${{ matrix.cc }} == "gcc" && ${{ matrix.sanitizer }} == "address" ]]; then
-              cmd="v ${{ env.VFLAGS }} -cflags -fsanitize=address -cflags -fsanitize-address-use-after-scope -cflags -fsanitize=pointer-compare -cflags -fsanitize=pointer-subtract test ${{ env.MOD_PATH }}"
-            else
-              cmd="v ${{ env.VFLAGS }} -cflags -fsanitize=${{ matrix.sanitizer }} test ${{ env.MOD_PATH }}"
-            fi
-            echo "$cmd"
-            eval "$cmd"
+        run: |
+          if [[ ${{ matrix.cc }} == "gcc" && ${{ matrix.sanitizer }} == "address" ]]; then
+            cmd="v ${{ env.VFLAGS }} -cflags -fsanitize=address -cflags -fsanitize-address-use-after-scope -cflags -fsanitize=pointer-compare -cflags -fsanitize=pointer-subtract test ${{ env.MOD_PATH }}"
+          else
+            cmd="v ${{ env.VFLAGS }} -cflags -fsanitize=${{ matrix.sanitizer }} test ${{ env.MOD_PATH }}"
+          fi
+          echo "$cmd"
+          eval "$cmd"

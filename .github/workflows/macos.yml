@@ -61,8 +61,4 @@ jobs:
       - name: Build
         run: v -shared ${{ env.MOD_PATH }}
       - name: Run tests
-        uses: nick-fields/retry@v2
-        with:
-          timeout_minutes: 3
-          max_attempts: 3
-          command: v ${{ env.VFLAGS }} test ${{ env.MOD_PATH }}
+        run: v ${{ env.VFLAGS }} test ${{ env.MOD_PATH }}
