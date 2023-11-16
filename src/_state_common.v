@@ -1,6 +1,6 @@
 module vibe
 
-import vibe.curl.state
+import curl.state
 import time
 
 pub struct Request {
@@ -36,6 +36,4 @@ enum Method {
 	head
 }
 
-// vfmt off
 pub type CustomInitFlag = state.GlobalInitFlag
-// vfmt on

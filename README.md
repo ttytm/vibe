@@ -14,13 +14,23 @@ higher-level API.
 
 - Install via V's cli
 
-  ```
-  v install --git https://github.com/ttytm/vibe
+  ```sh
+  # Into `<vmodules_dir>/vibe`
+  v install https://github.com/ttytm/vibe
+  # OR as vpm module under a namespace `<vmodules_dir>/ttytm/vibe`
+  v install ttytm.vibe
   ```
 
 ## Usage examples
 
 #### GET request
+
+> **NOTE**
+> For installations as VPM module use
+>
+> ```v
+> import ttytm.vibe
+> ```
 
 ```v
 import vibe
