@@ -1,5 +1,5 @@
 // https://curl.se/libcurl/c/libcurl-errors.html
-[generated]
+@[generated]
 module state
 
 // TODO: check commented after debian 10 EOL, June 30, 2024. Compare Ubuntu LTS 22.04 with Debian 11.

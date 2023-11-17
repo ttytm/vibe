@@ -26,7 +26,7 @@ fn (mut resp VibeResponse) get_http_version() ! {
 }
 
 // https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
-[generated]
+@[generated]
 fn (status_code Status) msg_() string {
 	return match status_code {
 		100 { 'Continue' }

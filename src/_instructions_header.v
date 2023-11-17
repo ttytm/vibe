@@ -33,7 +33,7 @@ fn set_header(handle &curl.Handle, headers HttpHeaders) &curl.LinkedList {
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
-[generated]
+@[generated]
 pub fn (header HttpHeader) str() string {
 	return match header {
 		.accept { 'Accept' }

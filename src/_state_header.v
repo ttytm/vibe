@@ -2,14 +2,14 @@ module vibe
 
 type Status = int
 
-[params]
+@[params]
 struct HttpHeaders {
 	common map[HttpHeader]string
 	custom map[string]string
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
-[generated]
+@[generated]
 pub enum HttpHeader {
 	accept
 	accept_ch
