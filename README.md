@@ -1,11 +1,15 @@
-<h1 align="center"><a href="https://github.com/ttytm/vibe"><img src ="https://github.com/ttytm/ui/assets/34311583/15dcf057-8284-4f5d-8622-0d8d878fa4bb" alt="vibe logo" width="125"></a></h1>
+<div align="center">
+
+# [![logo](https://github.com/ttytm/vibe/assets/34311583/b894de5f-cdcd-4002-82ee-29d2c9b4eccd)](https://github.com/ttytm/vibe)
+
+</div>
 
 Vibe is a request library that wraps libcurl to enable fast and reliable requests while providing a
 higher-level API.
 
 ## Installation
 
-**Build Dependencies**
+**Development- / Build Dependencies**
 
 - libcurl - E.g., on Debian-based Linux distros, this might be `libcurl4-openssl-dev` or
   `libcurl4-gnutls-dev`.
