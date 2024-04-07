@@ -1,7 +1,7 @@
 module vibe
 
 import os
-import vibe.curl
+import curl
 
 fn (req Request) download_file_(url string, file_path string) !Response {
 	h := curl.easy_init() or { return http_error(.easy_init, none) }

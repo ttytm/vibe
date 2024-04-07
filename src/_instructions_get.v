@@ -1,6 +1,6 @@
 module vibe
 
-import vibe.curl
+import curl
 
 fn (req Request) get_(url string) !Response {
 	// Curl handle

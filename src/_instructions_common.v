@@ -1,6 +1,6 @@
 module vibe
 
-import vibe.curl
+import curl
 
 // Automatically call curl_global_init when using `vibe`.
 fn init() {

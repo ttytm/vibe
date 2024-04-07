@@ -1,6 +1,6 @@
 module instructions
 
-import vibe.curl.state
+import state
 
 fn C.curl_global_init(state.GlobalInitFlag)
 
