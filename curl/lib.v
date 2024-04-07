@@ -5,8 +5,8 @@ License: MIT
 
 module curl
 
-import vibe.curl.instructions
-import vibe.curl.state
+import instructions
+import state
 
 #flag -lcurl
 #include <curl/curl.h>

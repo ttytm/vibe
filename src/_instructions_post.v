@@ -1,6 +1,6 @@
 module vibe
 
-import vibe.curl
+import curl
 
 fn (req Request) post_(url string, data string) !Response {
 	h := curl.easy_init() or { return http_error(.easy_init, none) }

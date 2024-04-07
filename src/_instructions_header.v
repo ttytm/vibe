@@ -1,6 +1,6 @@
 module vibe
 
-import vibe.curl
+import curl
 
 fn set_header(handle &curl.Handle, headers HttpHeaders) &curl.LinkedList {
 	mut list := &curl.LinkedList(unsafe { nil })
