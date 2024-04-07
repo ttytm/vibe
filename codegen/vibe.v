@@ -2,10 +2,8 @@
 import net.html
 import vibe
 
-const (
-	request   = vibe.Request{}
-	separator = '\n-----------------------------------------------------------------------\n'
-)
+const request = vibe.Request{}
+const separator = '\n-----------------------------------------------------------------------\n'
 
 fn gen_headers() string {
 	body := request.get_slice('https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers',

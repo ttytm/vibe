@@ -2,10 +2,8 @@
 import net.html
 import vibe
 
-const (
-	request   = vibe.Request{}
-	separator = '\n-----------------------------------------------------------------------\n'
-)
+const request = vibe.Request{}
+const separator = '\n-----------------------------------------------------------------------\n'
 
 fn gen_opts() string {
 	body := request.get('https://curl.se/libcurl/c/easy_setopt_options.html') or {
