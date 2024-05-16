@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 jobs:
-  verify:
+  fmt:
     runs-on: ubuntu-latest
     steps:
       - name: Restore cache
@@ -15,9 +15,38 @@ jobs:
             ~/.vmodules
           key: ubuntu-latest-${{ github.sha }}
           fail-on-cache-miss: true
-      - name: Setup V
-        run: ~/v/v symlink && v version
       - name: Verify formatting
-        run: v fmt -verify ~/.vmodules/vibe && exit 0 || v fmt -diff . && exit 1
+        run: ~/v/v fmt -verify ~/.vmodules/vibe && exit 0 || v fmt -diff . && exit 1
+
+  vet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restore cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/v
+            ~/.vmodules
+          key: ubuntu-latest-${{ github.sha }}
+          fail-on-cache-miss: true
       - name: Vet
-        run: v vet -W ~/.vmodules/vibe
+        run: ~/v/v vet -W ~/.vmodules/vibe
+
+  check-md:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restore cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/v
+            ~/.vmodules
+          key: ubuntu-latest-${{ github.sha }}
+          fail-on-cache-miss: true
+      - name: Setup dependencies
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: libcurl4-openssl-dev
+          version: 1.0
+      - name: Check markdown
+        run: ~/v/v check-md -hide-warnings ~/.vmodules/vibe

@@ -2,35 +2,18 @@ name: Docs
 
 on:
   push:
-    paths-ignore: ['**.yml', '!.github/workflows/docs.yml']
-  pull_request:
+    branches: [main]
     paths-ignore: ['**.yml', '!.github/workflows/docs.yml']
   workflow_dispatch:
 
-jobs:
-  check-docs:
-    runs-on: ubuntu-latest
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref_name == 'main' && github.sha || github.ref }}
-      cancel-in-progress: true
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup V
-        uses: vlang/setup-v@v1.4
-      - name: Setup Dependencies
-        uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
-          packages: libcurl4-openssl-dev
-          version: 1.0
-      - name: Check markdown
-        run: v check-md -hide-warnings ~/.vmodules/vibe
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref_name != 'main' }}
 
+jobs:
   deploy:
-    if: github.event_name == 'push' && github.ref_name == 'main' && github.repository == 'ttytm/vibe'
+    if: github.repository == 'ttytm/vibe'
     runs-on: ubuntu-latest
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: ${{ github.ref_name != 'main' }}
     permissions:
       contents: read
       pages: write
