@@ -11,13 +11,11 @@ jobs:
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout V
-        uses: actions/checkout@v4
-        with:
-          repository: 'vlang/v'
-          path: v
       - name: Setup V
-        run: mv v ~/v && cd ~/v && make -j4
+        run: |
+          curl -Lo v_linux.zip https://github.com/vlang/v/releases/latest/download/v_linux.zip
+          unzip -o v_linux.zip
+          mv v ~/v
       - name: Setup Dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
@@ -27,7 +25,7 @@ jobs:
         with:
           path: vibe
       - name: Setup V module
-        run: mv vibe ~/.vmodules/vibe
+        run: mkdir ~/.vmodules && mv vibe ~/.vmodules/vibe
       - name: Save cache
         uses: actions/cache/save@v4
         with:

@@ -7,22 +7,24 @@ jobs:
   setup:
     strategy:
       matrix:
-        os: [macos-11, macos-latest]
+        include:
+          - os: macos-latest
+            v_archive: v_macos_arm64.zip
+          - os: macos-12
+            v_archive: v_macos_x86_64.zip
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout V
-        uses: actions/checkout@v4
-        with:
-          repository: 'vlang/v'
-          path: v
       - name: Setup V
-        run: mv v ~/v && cd ~/v && make -j4
+        run: |
+          curl -Lo ${{ matrix.v_archive }} https://github.com/vlang/v/releases/latest/download/${{ matrix.v_archive }}
+          unzip -o ${{ matrix.v_archive }}
+          mv v ~/v
       - uses: actions/checkout@v4
         with:
           path: vibe
       - name: Setup V module
-        run: mv vibe ~/.vmodules/vibe
+        run: mkdir ~/.vmodules && mv vibe ~/.vmodules/vibe
       - name: Save cache
         uses: actions/cache/save@v4
         with:
@@ -35,7 +37,7 @@ jobs:
     needs: setup
     strategy:
       matrix:
-        os: [macos-11, macos-latest]
+        os: [macos-12, macos-latest]
         cc: [tcc, clang]
         optimization: ['', '-W -cstrict']
         exclude:
