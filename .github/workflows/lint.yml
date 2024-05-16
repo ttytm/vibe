@@ -3,39 +3,21 @@ name: Lint
 on:
   workflow_call:
 
-env:
-  REPO_NAME: ${{ github.event.repository.name }}
-  MOD_PATH: ~/.vmodules/vibe/
-
 jobs:
-  fmt:
+  verify:
     runs-on: ubuntu-latest
     steps:
-      - name: Restore Cache
-        uses: actions/cache/restore@v3
+      - name: Restore cache
+        uses: actions/cache/restore@v4
         with:
           path: |
-            vlang
+            ~/v
             ~/.vmodules
           key: ubuntu-latest-${{ github.sha }}
           fail-on-cache-miss: true
       - name: Setup V
-        uses: vlang/setup-v@v1.3
-      - name: Check Formatting
-        run: v fmt -verify ${{ env.MOD_PATH }}
-
-  vet:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Restore Cache
-        uses: actions/cache/restore@v3
-        with:
-          path: |
-            vlang
-            ~/.vmodules
-          key: ubuntu-latest-${{ github.sha }}
-          fail-on-cache-miss: true
-      - name: Setup V
-        uses: vlang/setup-v@v1.3
-      - name: Vet ${{ env.REPO_NAME }}
-        run: v vet -W ${{ env.MOD_PATH }}/src/
+        run: ~/v/v symlink && v version
+      - name: Verify formatting
+        run: v fmt -verify ~/.vmodules/vibe && exit 0 || v fmt -diff . && exit 1
+      - name: Vet
+        run: v vet -W ~/.vmodules/vibe
