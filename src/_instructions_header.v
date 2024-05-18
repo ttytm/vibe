@@ -2,32 +2,23 @@ module vibe
 
 import curl
 
-fn set_header(handle &curl.Handle, headers HttpHeaders) &curl.LinkedList {
-	mut list := &curl.LinkedList(unsafe { nil })
-
-	// Set default header and return if no headers were specified
-	if headers.common.len == 0 && headers.custom.len == 0 {
+fn set_header(handle &curl.Handle, common_headers map[HttpHeader]string, custom_headers map[string]string) &curl.LinkedList {
+	if HttpHeader.user_agent !in common_headers {
+		// Set default user agent if none was specified.
 		curl.easy_setopt(handle, .useragent, '${manifest.name}/${manifest.version}')
-		return list
+	}
+	if common_headers.len == 0 && custom_headers.len == 0 {
+		return &curl.LinkedList(unsafe { nil })
 	}
 
-	mut has_user_agent := false
-	for k, v in headers.common {
-		if k == .user_agent {
-			has_user_agent = true
-		}
+	mut list := &curl.LinkedList(unsafe { nil })
+	for k, v in common_headers {
 		list = curl.slist_append(list, '${k.str()}: ${v}')
 	}
-	for k, v in headers.custom {
+	for k, v in custom_headers {
 		list = curl.slist_append(list, '${k}: ${v}')
 	}
-
 	curl.easy_setopt(handle, .httpheader, list)
-
-	// Set default user agent if none was specified
-	if !has_user_agent {
-		curl.easy_setopt(handle, .useragent, '${manifest.name}/${manifest.version}')
-	}
 
 	return list
 }

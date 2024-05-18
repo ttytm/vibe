@@ -5,7 +5,7 @@ import curl
 fn (req Request) get_(url string) !Response {
 	// Curl handle
 	h := curl.easy_init() or { return http_error(.easy_init, none) }
-	header := set_header(h, common: req.headers, custom: req.custom_headers)
+	header := set_header(h, req.headers, req.custom_headers)
 	defer {
 		curl.easy_cleanup(h)
 		curl.slist_free_all(header)
@@ -31,7 +31,7 @@ fn (req Request) get_(url string) !Response {
 
 fn (req Request) get_slice_(url string, start usize, max_size_ ?usize) !Response {
 	h := curl.easy_init() or { return http_error(.easy_init, none) }
-	header := set_header(h, common: req.headers, custom: req.custom_headers)
+	header := set_header(h, req.headers, req.custom_headers)
 	defer {
 		curl.easy_cleanup(h)
 		curl.slist_free_all(header)
