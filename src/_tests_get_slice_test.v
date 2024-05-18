@@ -1,19 +1,14 @@
-// vtest flaky: true
-// vtest retry: 3
+// vtest retry: 9
 module vibe
 
-import net.html
-
 fn test_get_slice() {
-	resp := get_slice('https://docs.vosca.dev/advanced-concepts/v-and-c.html', 65_000,
+	resp := get_slice('https://raw.githubusercontent.com/vlang/v/master/doc/docs.md', 185_000,
 		10_000)!
-	selector := html.parse(resp.body).get_tags_by_class_name('language-vmod')[0]
-
 	assert resp.status == 200
-	assert selector.text().trim(' \n') == "Module {
-    name: 'mymodule',
-    description: 'My nice module wraps a simple C library.',
-    version: '0.0.1'
-    dependencies: []
-}"
+	assert resp.body.contains("Module {
+\tname: 'mymodule',
+\tdescription: 'My nice module wraps a simple C library.',
+\tversion: '0.0.1'
+\tdependencies: []
+}"), resp.body
 }

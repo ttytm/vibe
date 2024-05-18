@@ -1,5 +1,4 @@
-// vtest flaky: true
-// vtest retry: 3
+// vtest retry: 9
 module vibe
 
 fn test_get() {
