@@ -2,8 +2,8 @@
 module vibe
 
 fn test_get_slice() {
-	resp := get_slice('https://raw.githubusercontent.com/vlang/v/master/doc/docs.md', 185_000,
-		10_000)!
+	resp := get_slice('https://raw.githubusercontent.com/vlang/v/master/doc/docs.md',
+		185_000, 10_000)!
 	assert resp.status == 200
 	assert resp.body.contains("Module {
 \tname: 'mymodule',
