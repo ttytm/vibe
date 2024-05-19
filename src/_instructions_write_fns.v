@@ -15,7 +15,7 @@ fn write_resp_header(data &char, size usize, nmemb usize, mut resp VibeResponse)
 fn write_resp_slice(data &char, size usize, nmemb usize, mut resp VibeResponse) usize {
 	n := size * nmemb
 	resp.pos += n
-	if resp.pos > resp.slice.start {
+	if resp.pos >= resp.slice.start {
 		resp.body += unsafe { data.vstring_with_len(int(n)) }
 		if resp.slice.end != resp.slice.start && resp.pos > resp.slice.end {
 			resp.slice.finished = true
