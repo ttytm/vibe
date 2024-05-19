@@ -57,8 +57,8 @@ fn (req Request) get_slice_(url string, start usize, max_size_ ?usize) !Response
 		curl.easy_getinfo(h, .response_code, &resp.status_code)
 	}
 
-	if resp.body.len == 0 {
-		slice_end := if max_size == 0 { resp.body.len } else { int(resp.slice.end) }
+	slice_end := if max_size != 0 { int(max_size) } else { resp.body.len }
+	if resp.body == '' {
 		return http_error(.slice_out_of_range, '${start}..${slice_end}')
 	}
 
@@ -67,9 +67,9 @@ fn (req Request) get_slice_(url string, start usize, max_size_ ?usize) !Response
 	if start < usize(resp.header.len) {
 		resp.body = resp.body[resp.header.len - int(start)..]
 	}
-	// If the last chunk was bigger than max_size, truncate it
-	if max_size < usize(resp.body.len) {
-		resp.body = resp.body[..max_size]
+	if slice_end < resp.body.len {
+		// If the last response chunk was longer than the max_size, truncate it.
+		resp.body = resp.body[..slice_end]
 	}
 
 	return resp.Response
