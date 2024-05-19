@@ -15,19 +15,15 @@ fn ecode(i int) state.Ecode {
 
 pub fn easy_init() !&C.CURL {
 	handle := C.curl_easy_init()
-	unsafe {
-		if handle == nil {
-			error('Failed performing curl.easy_init()')
-		}
+	if handle == unsafe { nil } {
+		error('Failed performing curl.easy_init()')
 	}
 	return handle
 }
 
 pub fn easy_strerror(err_code state.Ecode) string {
 	str_err := &char(C.curl_easy_strerror(int(err_code)))
-	unsafe {
-		return str_err.vstring()
-	}
+	return unsafe { str_err.vstring() }
 }
 
 pub fn easy_setopt[T](handle &C.CURL, option state.Opt, parameter T) state.Ecode {
