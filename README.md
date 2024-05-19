@@ -127,20 +127,24 @@ pub fn (req Request) download_file_with_progress(url string, file_path string, d
 import vibe
 import os
 
-struct Download {}
+// User-defined struct that implements the `Download` interface.
+struct MyStruct {
+	foo string
+	bar string
+}
 
-fn (dl Download) progress(pos u64, size u64) {
+fn (dl MyStruct) progress(pos u64, size u64) {
 	print('\rDownloading... ${f64(pos) / size * 100:.2f}%')
 	os.flush()
 }
 
-fn (dl Download) finish() {
+fn (dl MyStruct) finish() {
 	println('\nDownload completed.')
 }
 
-mut dl := Download{}
+mut download := MyStruct{}
 vibe.download_file_with_progress('https://github.com/vlang/v/releases/download/weekly.2023.23/v_linux.zip',
-	'v_linux.zip', mut dl)!
+	'v_linux.zip', mut download)!
 ```
 
 #### Persistent Cookie
