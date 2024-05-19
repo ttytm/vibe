@@ -2,14 +2,12 @@ module vibe
 
 fn write_resp(data &char, size usize, nmemb usize, mut resp VibeResponse) usize {
 	n := size * nmemb
-	resp.pos += n
 	resp.body += unsafe { data.vstring_with_len(int(n)) }
 	return n
 }
 
 fn write_resp_header(data &char, size usize, nmemb usize, mut resp VibeResponse) usize {
 	n := size * nmemb
-	resp.pos += n
 	resp.header += unsafe { data.vstring_with_len(int(n)) }
 	return n
 }
