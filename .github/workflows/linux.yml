@@ -13,19 +13,22 @@ jobs:
     steps:
       - name: Setup V
         run: |
-          curl -Lo v_linux.zip https://github.com/vlang/v/releases/latest/download/v_linux.zip
+          curl -LO https://github.com/vlang/v/releases/latest/download/v_linux.zip
           unzip -o v_linux.zip
           mv v ~/v
+          ~/v/v symlink && v -showcc self && v doctor
       - name: Setup Dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: libcurl4-openssl-dev
+          packages: libbsd-dev
           version: 1.0
       - uses: actions/checkout@v4
         with:
           path: vibe
       - name: Setup V module
-        run: mkdir ~/.vmodules && mv vibe ~/.vmodules/vibe
+        run: |
+          mv vibe ~/.vmodules/vibe
+          ~/.vmodules/vibe/curl/build.vsh --silent
       - name: Save cache
         uses: actions/cache/save@v4
         with:
@@ -62,11 +65,11 @@ jobs:
           key: ${{ matrix.os }}-${{ github.sha }}
           fail-on-cache-miss: true
       - name: Setup V
-        run: ~/v/v symlink && v -showcc self && v doctor
+        run: ~/v/v symlink
       - name: Setup Dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: libcurl4-openssl-dev
+          packages: libbsd-dev
           version: 1.0
       - name: Run tests
         run: v -stats test ~/.vmodules/vibe
@@ -100,11 +103,11 @@ jobs:
           key: ubuntu-latest-${{ github.sha }}
           fail-on-cache-miss: true
       - name: Setup V
-        run: ~/v/v symlink && v -showcc self && v doctor
+        run: ~/v/v symlink
       - name: Setup Dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: libcurl4-openssl-dev
+          packages: libbsd-dev
           version: 1.0
       - name: Run tests
         run: v -cflags -fsanitize=${{ matrix.sanitizer }} -stats test ~/.vmodules/vibe
