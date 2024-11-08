@@ -9,7 +9,8 @@ import instructions
 import state
 
 #flag -I@VMODROOT/curl/libcurl/include
-#flag @VMODROOT/curl/libcurl/lib/.libs/libcurl.so
+#flag -L@VMODROOT/curl/libcurl/lib -lcurl -lbrotlidec -lbrotlienc -lbrotlicommon -lcares -lidn2 -lnghttp2 -lnghttp3 -lpsl -lssh2 -lunistring -lz -lzstd
+#flag -L@VMODROOT/curl/libcurl/lib64 -lssl -lcrypto
 #include "curl/curl.h"
 
 pub type Handle = C.CURL
