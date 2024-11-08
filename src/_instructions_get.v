@@ -41,7 +41,7 @@ fn (req Request) get_slice_(url string, start usize, max_size_ ?usize) !Response
 	mut resp := VibeResponse{
 		slice: struct {
 			start: start
-			end: start + max_size
+			end:   start + max_size
 		}
 	}
 	req.set_get_opts(h, url, &resp)

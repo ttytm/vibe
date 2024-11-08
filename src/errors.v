@@ -29,6 +29,6 @@ fn (err HttpError) msg() string {
 fn http_error(kind HttpErrorKind, val ?string) IError {
 	return IError(HttpError{
 		kind: kind
-		val: val or { '' }
+		val:  val or { '' }
 	})
 }

@@ -17,14 +17,14 @@ fn try_request(request Request, attempt int, max_attempts int) !Response {
 
 fn test_post() {
 	req := Request{
-		headers: {
+		headers:        {
 			.user_agent:   'YourCustomUserAgent/v0.0.1'
 			.content_type: 'application/json; charset=utf-8'
 		}
 		custom_headers: {
 			'My-Custom-Header': 'FooBar'
 		}
-		timeout: time.second * 10
+		timeout:        time.second * 10
 	}
 	// Allow for retries as the current test relies on httpbin as a third party
 	// and may encounter slow/no response times.

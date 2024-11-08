@@ -45,9 +45,9 @@ pub enum HttpHeader {
 	date
 	device_memory // Experimental
 	digest
-	downlink // Experimental
+	downlink   // Experimental
 	early_data // Experimental
-	ect // Experimental
+	ect        // Experimental
 	etag
 	expect
 	expect_ct
@@ -74,17 +74,17 @@ pub enum HttpHeader {
 	referer
 	referrer_policy
 	retry_after
-	rtt // Experimental
-	save_data // Experimental
+	rtt                           // Experimental
+	save_data                     // Experimental
 	sec_ch_prefers_reduced_motion // Experimental
-	sec_ch_ua // Experimental
-	sec_ch_ua_arch // Experimental
-	sec_ch_ua_bitness // Experimental
-	sec_ch_ua_full_version_list // Experimental
-	sec_ch_ua_mobile // Experimental
-	sec_ch_ua_model // Experimental
-	sec_ch_ua_platform // Experimental
-	sec_ch_ua_platform_version // Experimental
+	sec_ch_ua                     // Experimental
+	sec_ch_ua_arch                // Experimental
+	sec_ch_ua_bitness             // Experimental
+	sec_ch_ua_full_version_list   // Experimental
+	sec_ch_ua_mobile              // Experimental
+	sec_ch_ua_model               // Experimental
+	sec_ch_ua_platform            // Experimental
+	sec_ch_ua_platform_version    // Experimental
 	sec_fetch_dest
 	sec_fetch_mode
 	sec_fetch_site
@@ -110,9 +110,9 @@ pub enum HttpHeader {
 	www_authenticate
 	x_content_type_options
 	x_dns_prefetch_control // Non-standard
-	x_forwarded_for // Non-standard
-	x_forwarded_host // Non-standard
-	x_forwarded_proto // Non-standard
+	x_forwarded_for        // Non-standard
+	x_forwarded_host       // Non-standard
+	x_forwarded_proto      // Non-standard
 	x_frame_options
 	x_xss_protection // Non-standard
 }

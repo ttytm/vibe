@@ -48,8 +48,8 @@ fn (req Request) download_file_with_progress_(url string, file_path string, mut 
 	mut length := u64(0)
 	curl.easy_getinfo(h, .content_length_download_t, &length)
 	mut fw := ProgressWriter{
-		file: file
-		size: length
+		file:     file
+		size:     length
 		download: dl
 	}
 	req.set_download_opts(h)

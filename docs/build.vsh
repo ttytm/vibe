@@ -32,7 +32,7 @@ fn run(cmd cli.Command) ! {
 }
 
 mut cmd := cli.Command{
-	name: 'build.vsh'
+	name:    'build.vsh'
 	execute: run
 }
 cmd.parse(os.args)
