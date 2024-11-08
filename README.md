@@ -161,7 +161,7 @@ import os
 cookie_jar := './demo_cookie'
 
 req := vibe.Request{
-	headers: {
+	headers:    {
 		.content_type: 'application/json; charset=utf-8'
 	}
 	cookie_jar: cookie_jar
@@ -172,7 +172,7 @@ req.post('https://api.yourdomain.com/v1/login', '{"username":"yourname","passwor
 
 // Use the `cookie_file` in subsequent sessions to access endpoints that require the authentication above.
 req2 := vibe.Request{
-	headers: {
+	headers:     {
 		.content_type: 'application/json; charset=utf-8'
 	}
 	cookie_file: cookie_jar
