@@ -9,7 +9,12 @@ import instructions
 import state
 
 #flag -I@VMODROOT/curl/libcurl/include
-#flag -L@VMODROOT/curl/libcurl/lib/.libs -lcurl
+#flag -L@VMODROOT/curl/libcurl/lib/.libs
+$if linux {
+	// Platform limitation like `linux` appears not to work when used without `-`.
+	#flag @VMODROOT/curl/libcurl/lib/.libs/libcurl.so
+}
+#flag darwin -lcurl
 #include "curl/curl.h"
 
 pub type Handle = C.CURL
