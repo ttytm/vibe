@@ -11,7 +11,8 @@ import state
 #flag linux -I@VMODROOT/curl/libcurl/include
 #flag linux -L@VMODROOT/curl/libcurl/lib -lbrotlidec -lbrotlienc -lbrotlicommon -lcares -lidn2 -lnghttp2 -lnghttp3 -lpsl -lssh2 -lunistring -lz -lzstd
 #flag linux -L@VMODROOT/curl/libcurl/lib64 -lssl -lcrypto
-#flag -lcurl
+#flag linux @VMODROOT/curl/libcurl/lib/.libs/libcurl.so
+#flag darwin -lcurl
 #include "curl/curl.h"
 
 pub type Handle = C.CURL
