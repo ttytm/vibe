@@ -7,24 +7,24 @@ jobs:
   setup:
     strategy:
       matrix:
-        include:
-          - os: macos-latest
-            v_archive: v_macos_arm64.zip
-          - os: macos-12
-            v_archive: v_macos_x86_64.zip
+        os: [macos-13, macos-latest]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
       - name: Setup V
         run: |
-          curl -Lo ${{ matrix.v_archive }} https://github.com/vlang/v/releases/latest/download/${{ matrix.v_archive }}
-          unzip -o ${{ matrix.v_archive }}
+          [[ ${{ matrix.os }} == "macos-13" ]] && archive="v_macos_x86_64.zip" || archive="v_macos_arm64.zip"
+          curl -LO https://github.com/vlang/v/releases/latest/download/$archive
+          unzip -o $archive
           mv v ~/v
+          ~/v/v symlink && v -showcc self && v doctor
       - uses: actions/checkout@v4
         with:
           path: vibe
       - name: Setup V module
-        run: mkdir ~/.vmodules && mv vibe ~/.vmodules/vibe
+        run: |
+          mv vibe ~/.vmodules/vibe
+          ~/.vmodules/vibe/curl/build.vsh --silent
       - name: Save cache
         uses: actions/cache/save@v4
         with:
@@ -37,7 +37,7 @@ jobs:
     needs: setup
     strategy:
       matrix:
-        os: [macos-12, macos-latest]
+        os: [macos-13, macos-latest]
         cc: [tcc, clang]
         optimization: ['', '-W -cstrict']
         exclude:
@@ -57,6 +57,6 @@ jobs:
           key: ${{ matrix.os }}-${{ github.sha }}
           fail-on-cache-miss: true
       - name: Setup V
-        run: ~/v/v symlink && v -showcc self && v doctor
+        run: ~/v/v symlink
       - name: Run tests
         run: v ${{ env.VFLAGS }} test ~/.vmodules/vibe

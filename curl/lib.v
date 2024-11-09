@@ -8,8 +8,14 @@ module curl
 import instructions
 import state
 
-#flag -lcurl
-#include <curl/curl.h>
+#flag -I@VMODROOT/curl/libcurl/include
+#flag -L@VMODROOT/curl/libcurl/lib/.libs
+#flag linux @VMODROOT/curl/libcurl/lib/.libs/libcurl.so
+$if gcc {
+	#flag -lcurl
+}
+#flag darwin -lcurl
+#include "curl/curl.h"
 
 pub type Handle = C.CURL
 
@@ -25,7 +31,7 @@ pub type SHEcode = state.SHEcode
 
 pub type UEcode = state.UEcode
 
-// pub type Hcode = state.Hcode
+pub type Hcode = state.Hcode
 
 pub type GlobalInitFlag = state.GlobalInitFlag
 
