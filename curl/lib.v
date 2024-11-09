@@ -9,7 +9,7 @@ import instructions
 import state
 
 #flag -I@VMODROOT/curl/libcurl/include
-#flag @VMODROOT/curl/libcurl/lib/.libs/libcurl.so
+#flag -L@VMODROOT/curl/libcurl/lib/.libs -lcurl
 #include "curl/curl.h"
 
 pub type Handle = C.CURL
