@@ -7,8 +7,9 @@ import net.http
 
 const parent_dir = '${@VMODROOT}/curl'
 const dl_base_url = 'https://curl.se/download/'
-const dl_file = 'curl-8.10.1.tar.gz'
-const dl_dir = join_path(parent_dir, 'curl-8.10.1')
+const curl_version = $if linux { 'curl-8.7.1' } $else { 'curl-8.11.0' }
+const dl_file = '${curl_version}.tar.gz'
+const dl_dir = join_path(parent_dir, curl_version)
 const dst_dir = join_path(parent_dir, 'libcurl')
 
 fn download(silent bool) {
