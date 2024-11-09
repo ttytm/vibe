@@ -7,18 +7,15 @@ jobs:
   setup:
     strategy:
       matrix:
-        include:
-          - os: macos-latest
-            v_archive: v_macos_arm64.zip
-          - os: macos-12
-            v_archive: v_macos_x86_64.zip
+        os: [macos-13, macos-latest]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
       - name: Setup V
         run: |
-          curl -LO https://github.com/vlang/v/releases/latest/download/${{ matrix.v_archive }}
-          unzip -o ${{ matrix.v_archive }}
+          [[ ${{ matrix.os }} == "macos-13" ]] && archive="v_macos_x86_64.zip" || archive="v_macos_arm64.zip"
+          curl -LO https://github.com/vlang/v/releases/latest/download/$archive
+          unzip -o $archive
           mv v ~/v
           ~/v/v symlink && v -showcc self && v doctor
       - uses: actions/checkout@v4
@@ -40,7 +37,7 @@ jobs:
     needs: setup
     strategy:
       matrix:
-        os: [macos-12, macos-latest]
+        os: [macos-13, macos-latest]
         cc: [tcc, clang]
         optimization: ['', '-W -cstrict']
         exclude:
