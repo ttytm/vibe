@@ -9,20 +9,16 @@ higher-level API.
 
 ## Installation
 
-**Development- / Build Dependencies**
-
-- libcurl - E.g., on Debian-based Linux distros, this might be `libcurl4-openssl-dev` or
-  `libcurl4-gnutls-dev`.
-
-**Vibe as V module**
-
 - Install via V's cli
 
   ```sh
-  # Into `<vmodules_dir>/vibe`
   v install https://github.com/ttytm/vibe
-  # OR as vpm module under a namespace `<vmodules_dir>/ttytm/vibe`
-  v install ttytm.vibe
+  ```
+
+- Setup development dependency
+
+  ```sh
+  ~/.vmodules/vibe/curl/build.vsh
   ```
 
 ## Usage examples
