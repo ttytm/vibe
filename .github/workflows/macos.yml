@@ -25,9 +25,7 @@ jobs:
         with:
           path: vibe
       - name: Setup V module
-        run: |
-          mv vibe ~/.vmodules/vibe
-          ~/.vmodules/vibe/curl/setup.vsh --silent
+        run: mv vibe ~/.vmodules/vibe
       - name: Save cache
         uses: actions/cache/save@v4
         with:

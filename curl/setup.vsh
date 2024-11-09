@@ -7,11 +7,7 @@ import net.http
 
 const parent_dir = '${@VMODROOT}/curl'
 const dl_base_url = 'https://github.com/stunnel/static-curl/releases/download/8.6.0-1'
-const dl_file = $if linux {
-	'curl-linux-x86_64-dev-8.6.0.tar.xz'
-} $else {
-	'curl-macos-aarch64-dev-8.6.0.tar.xz'
-}
+const dl_file = 'curl-linux-x86_64-dev-8.6.0.tar.xz'
 const dst_dir = join_path(parent_dir, 'libcurl')
 
 // == Download & Build Library ================================================
