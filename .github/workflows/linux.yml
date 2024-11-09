@@ -17,11 +17,6 @@ jobs:
           unzip -o v_linux.zip
           mv v ~/v
           ~/v/v symlink && v -showcc self && v doctor
-      - name: Setup Dependencies
-        uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
-          packages: libbsd-dev
-          version: 1.0
       - uses: actions/checkout@v4
         with:
           path: vibe
@@ -66,11 +61,6 @@ jobs:
           fail-on-cache-miss: true
       - name: Setup V
         run: ~/v/v symlink
-      - name: Setup Dependencies
-        uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
-          packages: libbsd-dev
-          version: 1.0
       - name: Run tests
         run: v -stats test ~/.vmodules/vibe
 
@@ -104,10 +94,5 @@ jobs:
           fail-on-cache-miss: true
       - name: Setup V
         run: ~/v/v symlink
-      - name: Setup Dependencies
-        uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
-          packages: libbsd-dev
-          version: 1.0
       - name: Run tests
         run: v -cflags -fsanitize=${{ matrix.sanitizer }} -stats test ~/.vmodules/vibe
