@@ -7,24 +7,24 @@ import net.http
 
 const parent_dir = '${@VMODROOT}/curl'
 const dl_base_url = 'https://curl.se/download/'
-const dl_file = 'curl-8.4.0.tar.gz'
-const dl_dir = join_path(parent_dir, 'curl-8.4.0')
+const dl_file = 'curl-8.11.0.tar.gz'
+const dl_dir = join_path(parent_dir, 'curl-8.11.0')
 const dst_dir = join_path(parent_dir, 'libcurl')
 
-// == Download & Build Library ================================================
-
 fn download(silent bool) {
-	println('Download...')
+	println('(1/4) Downloading...')
 	s := chan bool{cap: 1}
 	if !silent {
 		spawn spinner(s)
 	}
 	http.download_file('${dl_base_url}/${dl_file}', '${parent_dir}/${dl_file}') or { panic(err) }
 	s <- true
+	// A short sleep appears to help ensure the spinner is cleared before the next print.
+	time.sleep(100 * time.millisecond)
 }
 
 fn prep(silent bool) ! {
-	println('Extract...')
+	println('(2/4) Extracting...')
 	chdir(parent_dir)!
 	mut s := chan bool{cap: 1}
 	if !silent {
@@ -35,7 +35,7 @@ fn prep(silent bool) ! {
 
 	time.sleep(100 * time.millisecond)
 
-	println('Configure...')
+	println('(3/4) Configuring...')
 	chdir(dl_dir)!
 	s = chan bool{cap: 1}
 	if !silent {
@@ -48,7 +48,7 @@ fn prep(silent bool) ! {
 	time.sleep(100 * time.millisecond)
 
 	// TODO: windows build?
-	println('Build...')
+	println('(4/4) Building...')
 	s = chan bool{cap: 1}
 	if !silent {
 		spawn spinner(s)
@@ -70,6 +70,7 @@ fn spinner(ch chan bool) {
 		ch.try_pop(mut finished)
 		if finished {
 			print('\r')
+			flush()
 			return
 		}
 		if pos == runes.len - 1 {
@@ -82,8 +83,6 @@ fn spinner(ch chan bool) {
 		time.sleep(100 * time.millisecond)
 	}
 }
-
-// == Commands ================================================================
 
 mut cmd := cli.Command{
 	name:          'build.vsh'
@@ -111,15 +110,12 @@ mut cmd := cli.Command{
 
 		download(silent)
 
-		// Short sleep helps to ensure the spinner was cleared before the next print.
-		time.sleep(100 * time.millisecond)
-
 		prep(silent)!
 
 		// Remove downloaded archive.
 		rm(join_path(parent_dir, dl_file)) or {}
 
-		println('\rSuccess!')
+		println('\rFinished!')
 	}
 }
 cmd.parse(os.args)
