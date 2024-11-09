@@ -13,8 +13,8 @@ jobs:
     steps:
       - name: Setup V
         run: |
-          [[ ${{ matrix.os }} != "macos-12" ]] && archive="v_macos_x86_64.zip" || archive="v_macos_arm64.zip"
-          curl -LO https://github.com/vlang/v/releases/download/0.4.8/$archive
+          [[ ${{ matrix.os }} == "macos-12" ]] && archive="v_macos_x86_64.zip" || archive="v_macos_arm64.zip"
+          curl -LO https://github.com/vlang/v/releases/latest/download/$archive
           unzip -o $archive
           mv v ~/v
           ~/v/v symlink && v -showcc self && v doctor

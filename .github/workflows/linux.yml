@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Setup V
         run: |
-          curl -LO https://github.com/vlang/v/releases/download/0.4.8/v_linux.zip
+          curl -LO https://github.com/vlang/v/releases/latest/download/v_linux.zip
           unzip -o v_linux.zip
           mv v ~/v
           ~/v/v symlink && v -showcc self && v doctor
