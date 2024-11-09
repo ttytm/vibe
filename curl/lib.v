@@ -11,6 +11,9 @@ import state
 #flag -I@VMODROOT/curl/libcurl/include
 #flag -L@VMODROOT/curl/libcurl/lib/.libs
 #flag linux @VMODROOT/curl/libcurl/lib/.libs/libcurl.so
+$if gcc {
+	#flag -lcurl
+}
 #flag darwin -lcurl
 #include "curl/curl.h"
 
