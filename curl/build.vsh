@@ -5,62 +5,72 @@ import os
 import time
 import net.http
 
-const parent_dir = '${@VMODROOT}/curl'
-const dl_base_url = 'https://curl.se/download/'
-const curl_version = $if linux { 'curl-8.7.1' } $else { 'curl-8.11.0' }
-const dl_file = '${curl_version}.tar.gz'
-const dl_dir = join_path(parent_dir, curl_version)
-const dst_dir = join_path(parent_dir, 'libcurl')
+const curl_mod_dir = '${@VMODROOT}/curl'
+const dst_dir = join_path(curl_mod_dir, 'libcurl')
 
-fn download(silent bool) {
-	println('(1/4) Downloading...')
-	s := chan bool{cap: 1}
-	if !silent {
-		spawn spinner(s)
+fn setup(silent bool) ! {
+	curl_version := $if linux { 'curl-8.7.1' } $else { 'curl-8.11.0' }
+	extracted_dir := join_path(curl_mod_dir, curl_version)
+	dl_url := 'https://curl.se/download/${curl_version}.tar.gz'
+	dl_archive := dl_url.all_after_last('/')
+
+	{
+		println('(1/4) Downloading...')
+		s := chan bool{cap: 1}
+		if !silent {
+			spawn spinner(s)
+		}
+		http.download_file('${dl_url}', '${curl_mod_dir}/${dl_archive}')!
+		s <- true
+		defer { rm(join_path(curl_mod_dir, dl_archive)) or {} }
 	}
-	http.download_file('${dl_base_url}/${dl_file}', '${parent_dir}/${dl_file}') or { panic(err) }
-	s <- true
 	// A short sleep appears to help ensure the spinner is cleared before the next print.
 	time.sleep(100 * time.millisecond)
-}
 
-fn prep(silent bool) ! {
-	println('(2/4) Extracting...')
-	chdir(parent_dir)!
-	mut s := chan bool{cap: 1}
-	if !silent {
-		spawn spinner(s)
+	{
+		println('(2/4) Extracting...')
+		chdir(curl_mod_dir)!
+		s := chan bool{cap: 1}
+		if !silent {
+			spawn spinner(s)
+		}
+		execute('tar xf ' + dl_archive)
+		s <- true
 	}
-	execute('tar xf ' + dl_file)
-	s <- true
-
 	time.sleep(100 * time.millisecond)
 
-	println('(3/4) Configuring...')
-	chdir(dl_dir)!
-	s = chan bool{cap: 1}
-	if !silent {
-		spawn spinner(s)
+	{
+		println('(3/4) Configuring...')
+		chdir(extracted_dir)!
+		s := chan bool{cap: 1}
+		if !silent {
+			spawn spinner(s)
+		}
+		// execute('./configure --with-openssl --disable-shared')
+		execute('./configure --with-openssl')
+		s <- true
 	}
-	// execute('./configure --with-openssl --disable-shared')
-	execute('./configure --with-openssl')
-	s <- true
-
 	time.sleep(100 * time.millisecond)
 
-	// TODO: windows build?
-	println('(4/4) Building...')
-	s = chan bool{cap: 1}
-	if !silent {
-		spawn spinner(s)
+	{
+		println('(4/4) Building...')
+		s := chan bool{cap: 1}
+		if !silent {
+			spawn spinner(s)
+		}
+		execute('make -j4')
+		s <- true
 	}
-	execute('make -j4')
+	//
 
-	mkdir(dst_dir)!
-	mv(join_path(dl_dir, 'lib'), join_path(dst_dir, 'lib'))!
-	mv(join_path(dl_dir, 'include'), join_path(dst_dir, 'include'))!
-	// Remove unnecessary files, only keep the `lib` and `include` directories.
-	rmdir_all(dl_dir)!
+	{
+		mkdir(dst_dir)!
+		mv('${extracted_dir}/include', '${dst_dir}/include')!
+		$if linux {
+			mv('${extracted_dir}/lib/.libs/libcurl.so.4.8.0', '${dst_dir}/libcurl.so')!
+		}
+		rmdir_all(extracted_dir) or {}
+	}
 }
 
 fn spinner(ch chan bool) {
@@ -98,24 +108,15 @@ mut cmd := cli.Command{
 	}
 	flags:         [
 		cli.Flag{
+			name: 'silent' // Mainly for CI usage, preventing printing a vast amount of new lines by spinner.
 			flag: .bool
-			name: 'silent'
 		},
 	]
 	execute:       fn (cmd cli.Command) ! {
-		// Remove old library files
-		rmdir_all(dst_dir) or {}
-
-		// Mainly for CI usage, preventing printing a vast amount of new lines and sleep delay by spinner.
+		// TODO: build in temp then remove old and move new from temp.
+		rmdir_all(dst_dir) or {} // Remove old library files.
 		silent := cmd.flags.get_bool('silent')!
-
-		download(silent)
-
-		prep(silent)!
-
-		// Remove downloaded archive.
-		rm(join_path(parent_dir, dl_file)) or {}
-
+		setup(silent)!
 		println('\rFinished!')
 	}
 }
