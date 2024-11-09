@@ -10,9 +10,9 @@ import state
 
 #flag -I@VMODROOT/curl/libcurl/include
 #flag -L@VMODROOT/curl/libcurl/lib/.libs
-$if linux {
-	// Platform limitation like `linux` appears not to work when used without `-`.
-	#flag @VMODROOT/curl/libcurl/lib/.libs/libcurl.so
+#flag linux @VMODROOT/curl/libcurl/lib/.libs/libcurl.so
+$if gcc {
+	#flag -lcurl
 }
 #flag darwin -lcurl
 #include "curl/curl.h"
