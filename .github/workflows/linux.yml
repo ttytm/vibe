@@ -17,7 +17,6 @@ jobs:
           unzip -o v_linux.zip
           mv v ~/v
           ~/v/v symlink && v -showcc self && v doctor
-          version: 1.0
       - uses: actions/checkout@v4
         with:
           path: vibe
