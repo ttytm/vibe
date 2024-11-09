@@ -24,6 +24,7 @@ jobs:
         run: |
           mv vibe ~/.vmodules/vibe
           ~/.vmodules/vibe/curl/build.vsh --silent
+          find ~/.vmodules/vibe/curl
       - name: Save cache
         uses: actions/cache/save@v4
         with:
@@ -61,6 +62,7 @@ jobs:
           fail-on-cache-miss: true
       - name: Setup V
         run: ~/v/v symlink
+      - run: find ~/.vmodules/vibe/curl
       - name: Run tests
         run: v -stats test ~/.vmodules/vibe
 
