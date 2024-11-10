@@ -46,8 +46,7 @@ fn setup(silent bool) ! {
 		if !silent {
 			spawn spinner(s)
 		}
-		// execute('./configure --with-openssl --disable-shared')
-		execute('./configure --with-openssl')
+		execute('./configure --with-openssl --disable-static')
 		s <- true
 	}
 	time.sleep(100 * time.millisecond)
