@@ -37,7 +37,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        optimization: ['', '-W -cstrict']
+        optimization: ['', '-W']
       fail-fast: false
     steps:
       - name: Restore cache

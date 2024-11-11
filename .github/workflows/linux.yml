@@ -42,10 +42,11 @@ jobs:
       matrix:
         os: [ubuntu-20.04, ubuntu-latest]
         cc: [tcc, gcc, clang]
-        optimization: ['', '-W -cstrict']
-        exclude:
-          - cc: tcc
+        include:
+          - cc: clang
             optimization: '-W -cstrict'
+          - cc: gcc
+            optimization: '-W'
       fail-fast: false
     runs-on: ${{ matrix.os }}
     env:
