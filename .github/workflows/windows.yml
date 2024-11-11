@@ -35,8 +35,10 @@ jobs:
   test:
     needs: setup
     runs-on: windows-latest
-    env:
-      VFLAGS: -cg -cc gcc
+    strategy:
+      matrix:
+        optimization: ['', '-W -cstrict']
+      fail-fast: false
     steps:
       - name: Restore cache
         uses: actions/cache/restore@v4
@@ -52,4 +54,4 @@ jobs:
         shell: cmd
         run: |
           set PATH=%PATH%;%USERPROFILE%\.vmodules\vibe\curl\libcurl\bin
-          v test %USERPROFILE%\.vmodules\vibe
+          v -cg -cc gcc ${{ matrix.optimization }} -stats test %USERPROFILE%\.vmodules\vibe
