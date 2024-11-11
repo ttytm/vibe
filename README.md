@@ -18,7 +18,7 @@ higher-level API.
 - Setup development dependency
 
   ```sh
-  ~/.vmodules/vibe/curl/build.vsh
+  v ~/.vmodules/vibe/curl/build.vsh
   ```
 
 ## Usage examples
