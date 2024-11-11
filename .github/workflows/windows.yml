@@ -23,7 +23,7 @@ jobs:
       - name: Setup V module
         run: |
           mv vibe ~/.vmodules/vibe
-          v ~/.vmodules/vibe/curl/build.vsh --silent
+          v ~/.vmodules/vibe/curl/setup.vsh --silent
       - name: Save cache
         uses: actions/cache/save@v4
         with:

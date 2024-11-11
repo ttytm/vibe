@@ -127,7 +127,7 @@ fn spinner(ch chan bool) {
 }
 
 mut cmd := cli.Command{
-	name:          'build.vsh'
+	name:          'setup.vsh'
 	posix_mode:    true
 	required_args: 0
 	pre_execute:   fn (cmd cli.Command) ! {
