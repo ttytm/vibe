@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  workflow_call:
+
+jobs:
+  setup:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Setup V
+        run: |
+          curl -LO https://github.com/vlang/v/releases/latest/download/v_windows.zip
+          7z x v_windows.zip
+          mv v ~/v
+          ~/v/v symlink
+      - run: v -showcc self && v doctor
+      - uses: actions/checkout@v4
+        with:
+          path: vibe
+      - name: Setup V module
+        run: |
+          mv vibe ~/.vmodules/vibe
+          v ~/.vmodules/vibe/curl/setup.vsh --silent
+      - name: Save cache
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/v
+            ~/.vmodules
+          key: ${{ runner.os }}-${{ github.sha }}
+
+  test:
+    needs: setup
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        optimization: ['', '-W']
+      fail-fast: false
+    steps:
+      - name: Restore cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/v
+            ~/.vmodules
+          key: ${{ runner.os }}-${{ github.sha }}
+          fail-on-cache-miss: true
+      - name: Setup V
+        run: ~/v/v symlink
+      - name: Run tests
+        shell: cmd
+        run: |
+          set PATH=%PATH%;%USERPROFILE%\.vmodules\vibe\curl\libcurl\bin
+          v -cg -cc gcc ${{ matrix.optimization }} -stats test %USERPROFILE%\.vmodules\vibe

@@ -27,7 +27,11 @@ pub fn easy_strerror(err_code state.Ecode) string {
 }
 
 pub fn easy_setopt[T](handle &C.CURL, option state.Opt, parameter T) state.Ecode {
-	return ecode(C.curl_easy_setopt(handle, int(option), parameter))
+	$if T is string {
+		return ecode(C.curl_easy_setopt(handle, int(option), &char(parameter.str)))
+	} $else {
+		return ecode(C.curl_easy_setopt(handle, int(option), parameter))
+	}
 }
 
 pub fn easy_perform(handle &C.CURL) state.Ecode {

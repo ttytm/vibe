@@ -17,6 +17,10 @@ fn cleanup_() {
 }
 
 fn (req Request) set_common_opts(h &curl.Handle, url string, resp &VibeResponse) {
+	$if windows {
+		curl.easy_setopt(h, .ssl_verifypeer, 0)
+		curl.easy_setopt(h, .ssl_verifyhost, 0)
+	}
 	if req.cookie_jar != '' {
 		curl.easy_setopt(h, .cookiejar, req.cookie_jar)
 	}

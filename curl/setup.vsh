@@ -72,6 +72,38 @@ fn setup(silent bool) ! {
 	}
 }
 
+fn setup_windows(silent bool) ! {
+	dl_url := 'https://curl.se/windows/dl-8.11.0_1/curl-8.11.0_1-win64-mingw.zip'
+	dl_archive := dl_url.all_after_last('/')
+	extracted_dir := '${curl_mod_dir}/curl-8.11.0_1-win64-mingw'
+
+	{
+		println('(1/2) Downloading...')
+		s := chan bool{cap: 1}
+		if !silent {
+			spawn spinner(s)
+		}
+		http.download_file(dl_url, '${curl_mod_dir}/${dl_archive}')!
+		s <- true
+	}
+	time.sleep(100 * time.millisecond)
+
+	{
+		println('(2/2) Extracting...')
+		s := chan bool{cap: 1}
+		if !silent {
+			spawn spinner(s)
+		}
+		mkdir(dst_dir)!
+		execute_opt('powershell -command Expand-Archive -LiteralPath ${curl_mod_dir}/${dl_archive} -DestinationPath ${curl_mod_dir}')!
+		mv('${extracted_dir}/include', '${dst_dir}/include')!
+		mv('${extracted_dir}/bin/', '${dst_dir}/bin/')!
+		rmdir_all(extracted_dir) or {}
+		s <- true
+	}
+	time.sleep(100 * time.millisecond)
+}
+
 fn spinner(ch chan bool) {
 	runes := [`-`, `\\`, `|`, `/`]
 	mut pos := 0
@@ -95,7 +127,7 @@ fn spinner(ch chan bool) {
 }
 
 mut cmd := cli.Command{
-	name:          'build.vsh'
+	name:          'setup.vsh'
 	posix_mode:    true
 	required_args: 0
 	pre_execute:   fn (cmd cli.Command) ! {
@@ -115,7 +147,17 @@ mut cmd := cli.Command{
 		// TODO: build in temp then remove old and move new from temp.
 		rmdir_all(dst_dir) or {} // Remove old library files.
 		silent := cmd.flags.get_bool('silent')!
-		setup(silent)!
+		$if windows {
+			setup_windows(silent)!
+			defer {
+				// For now, don't automatically update the PATH, as it's easily corrupted and might cause annoyances on a user's machine.
+				println('\nOn Windows, libcurl requires access to a compatible curl.exe.')
+				println('A reliable way is to use the curl.exe that is shipped with every libcurl version.')
+				println("Add '${curl_mod_dir.replace('/', os.path_separator)}\\libcurl\\bin' to your PATH to make it accessible.")
+			}
+		} $else {
+			setup(silent)!
+		}
 		println('\rFinished!')
 	}
 }
