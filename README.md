@@ -21,16 +21,18 @@ higher-level API.
   v ~/.vmodules/vibe/curl/setup.vsh
   ```
 
-## Usage examples
+## Usage
+
+> [!IMPORTANT]
+> On Windows, use gcc to compile your V program
+>
+> ```sh
+> v -cc gcc your_awesome_program.v
+> ```
+
+### Examples
 
 #### GET request
-
-> **NOTE**
-> For installations as VPM module use
->
-> ```v
-> import ttytm.vibe
-> ```
 
 ```v
 import vibe
@@ -185,23 +187,14 @@ os.rm(cookie_jar)!
 
 ## Further information and upcoming features
 
-Vibe is in early development. Additional features will be added based on personal projects and
-sensible community needs.
+Additional features will be added based on personal projects and sensible community needs.
+Contributions like bug 🐛 reports, ⭐ stars and 💡 suggestions are welcome alike!
 
 ### Planned
 
+- [x] Linux, macOS, Windows
 - [x] Download with progress
 - [x] Custom headers
 - [x] Proxy support
-- [ ] SSL options
-- [ ] Extend HTTP methods
 
-### Considered
-
-- Additional curl-compatible formats beyond HTTP.
-- Expose response streams / io.Reader implementation
-- Support multiple curl versions / allow to opt into newer versions.
-
-Given that the project is being worked on in spare time, please excuse potential delays in replying
-due to limited time resources.
-Contributions like bug 🐛 reports, ⭐ stars and 💡 suggestions are welcome alike!
+Given that the project is being worked on in limited spare time, please excuse potential delays in replying.
