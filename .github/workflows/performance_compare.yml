@@ -1,0 +1,101 @@
+name: Performance comparison
+
+on:
+  workflow_dispatch:
+  # TODO: remove
+  push:
+
+jobs:
+  setup:
+    if: github.ref_name != 'main'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            v_archive: v_macos_arm64.zip
+          - os: ubuntu-latest
+            v_archive: v_linux.zip
+          - os: windows-latest
+            v_archive: v_windows.zip
+      fail-fast: false
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Setup V
+        run: |
+          curl -LO https://github.com/vlang/v/releases/latest/download/${{ matrix.v_archive }}
+          if [[ $RUNNER_OS == "Windows" ]]; then
+            7z x ${{ matrix.v_archive }}
+          else
+            unzip -o ${{ matrix.v_archive }}
+          fi
+          mv v ~/v
+          ~/v/v symlink
+      - run: v -showcc self && v doctor
+      - uses: actions/checkout@v4
+        with:
+          path: vibe
+      - name: Setup V module
+        run: |
+          mv vibe ~/.vmodules/vibe
+          ~/.vmodules/vibe/curl/setup.vsh --silent
+      - name: Save cache
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/v
+            ~/.vmodules
+          key: ${{ matrix.os }}-${{ github.sha }}
+
+  compare:
+    needs: setup
+    if: ${{ !cancelled() }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+      fail-fast: false
+    steps:
+      - name: Restore cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/v
+            ~/.vmodules
+          key: ${{ matrix.os }}-${{ github.sha }}
+          fail-on-cache-miss: true
+      - uses: actions/checkout@v4
+      - name: Setup V
+        run: ~/v/v symlink
+      - name: Run comparison
+        if: runner.os != 'Windows'
+        run: |
+          v -cc gcc -prod -o pc .github/workflows/performance_compare.v
+          ./pc -r 25 --single-host
+          ./pc -r 25 --single-host --use-vibe
+          ./pc -r 50 --single-host
+          ./pc -r 50 --single-host --use-vibe
+          ./pc -r 25
+          ./pc -r 25 --use-vibe
+          ./pc -r 50
+          ./pc -r 50 --use-vibe
+          ./pc -r 100
+          ./pc -r 100 --use-vibe
+      - name: Run comparison (Windows)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          set PATH=%PATH%;%USERPROFILE%\.vmodules\vibe\curl\libcurl\bin
+          v -cc gcc -prod -o pc.exe .github\workflows\performance_compare.v
+          pc.exe -r 25 --single-host
+          pc.exe -r 25 --single-host --use-vibe
+          pc.exe -r 50 --single-host
+          pc.exe -r 50 --single-host --use-vibe
+          pc.exe -r 25
+          pc.exe -r 25 --use-vibe
+          pc.exe -r 50
+          pc.exe -r 50 --use-vibe
+          pc.exe -r 100
+          pc.exe -r 100 --use-vibe
