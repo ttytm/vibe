@@ -30,7 +30,7 @@ jobs:
           path: |
             ~/v
             ~/.vmodules
-          key: ${{ runner.os }}-${{ github.sha }}
+          key: windows-latest-${{ github.sha }}
 
   test:
     needs: setup
@@ -46,7 +46,7 @@ jobs:
           path: |
             ~/v
             ~/.vmodules
-          key: ${{ runner.os }}-${{ github.sha }}
+          key: windows-latest-${{ github.sha }}
           fail-on-cache-miss: true
       - name: Setup V
         run: ~/v/v symlink
