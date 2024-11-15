@@ -16,12 +16,10 @@ fn setup(silent bool) ! {
 
 	{
 		println('(1/4) Downloading...')
-		s := chan bool{cap: 1}
-		if !silent {
-			spawn spinner(s)
-		}
+		spinner_ch := chan bool{}
+		spawn spinner(spinner_ch, silent)
 		http.download_file('${dl_url}', '${curl_mod_dir}/${dl_archive}')!
-		s <- true
+		spinner_ch.close()
 		defer { rm(join_path(curl_mod_dir, dl_archive)) or {} }
 	}
 	// A short sleep appears to help ensure the spinner is cleared before the next print.
@@ -30,35 +28,29 @@ fn setup(silent bool) ! {
 	{
 		println('(2/4) Extracting...')
 		chdir(curl_mod_dir)!
-		s := chan bool{cap: 1}
-		if !silent {
-			spawn spinner(s)
-		}
+		spinner_ch := chan bool{}
+		spawn spinner(spinner_ch, silent)
 		execute('tar xf ' + dl_archive)
-		s <- true
+		spinner_ch.close()
 	}
 	time.sleep(100 * time.millisecond)
 
 	{
 		println('(3/4) Configuring...')
 		chdir(extracted_dir)!
-		s := chan bool{cap: 1}
-		if !silent {
-			spawn spinner(s)
-		}
+		spinner_ch := chan bool{}
+		spawn spinner(spinner_ch, silent)
 		execute('./configure --with-openssl --disable-static')
-		s <- true
+		spinner_ch.close()
 	}
 	time.sleep(100 * time.millisecond)
 
 	{
 		println('(4/4) Building...')
-		s := chan bool{cap: 1}
-		if !silent {
-			spawn spinner(s)
-		}
+		spinner_ch := chan bool{}
+		spawn spinner(spinner_ch, silent)
 		execute('make -j4')
-		s <- true
+		spinner_ch.close()
 	}
 	//
 
@@ -79,40 +71,36 @@ fn setup_windows(silent bool) ! {
 
 	{
 		println('(1/2) Downloading...')
-		s := chan bool{cap: 1}
-		if !silent {
-			spawn spinner(s)
-		}
+		spinner_ch := chan bool{}
+		spawn spinner(spinner_ch, silent)
 		http.download_file(dl_url, '${curl_mod_dir}/${dl_archive}')!
-		s <- true
+		spinner_ch.close()
+		defer { rm(join_path(curl_mod_dir, dl_archive)) or {} }
 	}
 	time.sleep(100 * time.millisecond)
 
 	{
 		println('(2/2) Extracting...')
-		s := chan bool{cap: 1}
-		if !silent {
-			spawn spinner(s)
-		}
+		spinner_ch := chan bool{}
+		spawn spinner(spinner_ch, silent)
 		mkdir(dst_dir)!
 		execute_opt('powershell -command Expand-Archive -LiteralPath ${curl_mod_dir}/${dl_archive} -DestinationPath ${curl_mod_dir}')!
 		mv('${extracted_dir}/include', '${dst_dir}/include')!
 		mv('${extracted_dir}/bin/', '${dst_dir}/bin/')!
 		rmdir_all(extracted_dir) or {}
-		s <- true
+		spinner_ch.close()
 	}
-	time.sleep(100 * time.millisecond)
 }
 
-fn spinner(ch chan bool) {
+fn spinner(ch chan bool, silent bool) {
+	if silent {
+		return
+	}
 	runes := [`-`, `\\`, `|`, `/`]
 	mut pos := 0
 	for {
-		mut finished := false
-		ch.try_pop(mut finished)
-		if finished {
+		if ch.closed {
 			print('\r')
-			flush()
 			return
 		}
 		if pos == runes.len - 1 {
