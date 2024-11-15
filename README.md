@@ -197,4 +197,5 @@ Contributions like bug 🐛 reports, ⭐ stars and 💡 suggestions are welcome 
 - [x] Custom headers
 - [x] Proxy support
 
-Given that the project is being worked on in limited spare time, please excuse potential delays in replying.
+Given that the project is being worked on in limited spare time, please excuse potential delays in
+replying.
